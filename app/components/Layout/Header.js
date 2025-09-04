@@ -12,25 +12,30 @@ const Header = () => {
   const [active, setActive] = useState("home");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
+  const { isAuthenticated, setIsAuthenticated, setCookieExists, cookieExists } = useContext(AppContext);
 
   useEffect(() => {
     const token = Cookies.get("authToken");
     if (token) setIsAuthenticated(true);
-  }, [setIsAuthenticated]);
+  }, []);
+
+
+  const handleLogout = async () => {
+    await fetch("/api/logout", { method: "POST" });
+    setIsAuthenticated(false);
+    setCookieExists("notExists");
+    toast.success("Logged out successfully");
+    router.push("/login");
+  };
+
+  console.log(cookieExists);
+
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleNavClick = (page) => {
     setActive(page);
     setIsOpen(false);
-  };
-
-  const handleLogout = async () => {
-    await fetch("/api/logout", { method: "POST" });
-    setIsAuthenticated(false);
-    toast.success("Logged out successfully");
-    router.push("/login");
   };
 
   return (
@@ -68,7 +73,7 @@ const Header = () => {
               Dashboard
             </Link>
 
-            {isAuthenticated && (
+            {(cookieExists === "exists" || isAuthenticated) && (
               <button
                 onClick={handleLogout}
                 className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600"
@@ -76,6 +81,7 @@ const Header = () => {
                 Logout
               </button>
             )}
+
           </div>
 
           <div className="md:hidden">

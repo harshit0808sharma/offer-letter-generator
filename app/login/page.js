@@ -5,13 +5,14 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppContext } from "../context/AppContext";
 import { HiMail, HiLockClosed, HiUsers } from "react-icons/hi";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const { setIsAuthenticated } = useContext(AppContext);
+    const { setIsAuthenticated, setCookieExists } = useContext(AppContext);
 
     const handleLogin = async () => {
         setLoading(true);
@@ -25,14 +26,27 @@ export default function LoginPage() {
 
             if (res.ok) {
                 const data = await res.json();
-                document.cookie = `authToken=${data.token}; path=/;`;
 
+                // Set auth cookie
+                Cookies.set("authToken", data.token, { path: "/", expires: 1 });
+                console.log("Cookies after login:", Cookies.get());
+
+                // Update context
                 setIsAuthenticated(true);
+                setCookieExists("exists");
+
+                // Save to localStorage with 24-hour expiry
+                const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+                localStorage.setItem(
+                    "cookieExists",
+                    JSON.stringify({ value: "exists", expiresAt })
+                );
 
                 toast.success("Login successful! Redirecting...", {
                     position: "top-right",
                     autoClose: 2000,
                 });
+
                 setTimeout(() => router.push("/"), 2000);
             } else {
                 toast.error("Access denied. Only admin can login.", {
