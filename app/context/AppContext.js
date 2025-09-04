@@ -7,6 +7,7 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const [category, setCategory] = useState("Full-Time");
+     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [formData, setFormData] = useState({
         candidateName: "",
         jobTitle: "",
@@ -37,8 +38,8 @@ export const AppProvider = ({ children }) => {
     };
 
     const savePendingLetter = () => {
-        if (!formData.candidateName || !formData.jobTitle) {
-            toast.error("Candidate Name and Job Title are required.");
+        if (!formData.candidateName) {
+            toast.error("Candidate Name is required.");
             return;
         }
         const newLetter = {
@@ -68,10 +69,18 @@ export const AppProvider = ({ children }) => {
     };
 
     const generatePDF = async () => {
-        if (!formData.candidateName || !formData.jobTitle) {
-            toast.error("Please fill in at least Candidate Name and Job Title.");
+        if (
+            !formData.candidateName ||
+            !formData.jobTitle ||
+            !formData.joiningDate ||
+            !formData.location ||
+            !formData.salary ||
+            !formData.hrManagerName
+        ) {
+            toast.error("Please fill in all the required fields before generating the letter.");
             return;
         }
+
 
         try {
             const html2pdf = (await import("html2pdf.js")).default;
@@ -84,15 +93,45 @@ export const AppProvider = ({ children }) => {
                 jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
             };
 
+            // Generate the PDF first
             await html2pdf().set(options).from(element).save();
-            toast.success("Offer letter generated successfully!");
+
+            // Then save to recent letters
+            saveToRecentLetters();
+
+            toast.success("Offer letter generated and saved to recent!");
         } catch (error) {
             toast.error("Error generating PDF. Please try again.");
             console.error("PDF generation error:", error);
         }
     };
 
-    // console.log(formData);
+    const saveToRecentLetters = () => {
+        const newLetter = {
+            candidateName: formData.candidateName,
+            jobTitle: formData.jobTitle,
+            joiningDate: formData.joiningDate,
+            location: formData.location,
+            salary: formData.salary,
+            hrManagerName: formData.hrManagerName,
+            category,
+            generatedAt: new Date().toISOString(),
+        };
+
+        const existingLetters = JSON.parse(localStorage.getItem("recentLetters") || "[]");
+        existingLetters.unshift(newLetter);
+        localStorage.setItem("recentLetters", JSON.stringify(existingLetters));
+
+        // Clear form after saving
+        setFormData({
+            candidateName: "",
+            jobTitle: "",
+            joiningDate: "",
+            location: "",
+            salary: "",
+            hrManagerName: "",
+        });
+    };
 
     return (
         <AppContext.Provider
@@ -108,6 +147,8 @@ export const AppProvider = ({ children }) => {
                 generatePDF,
                 previewRef,
                 pendingLetters,
+                isAuthenticated,
+                setIsAuthenticated
             }}
         >
             {children}

@@ -57,6 +57,13 @@ const Hero = () => {
                   >
                     Internship
                   </Link>
+                  <Link
+                    href="/generator"
+                    onClick={() => setCategory("Contract")}
+                    className="px-4 py-2 bg-orange-600 text-white rounded-xl hover:bg-green-700 transition"
+                  >
+                    Contract
+                  </Link>
                 </div>
 
                 <button

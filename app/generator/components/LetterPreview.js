@@ -33,24 +33,28 @@ const LetterPreview = ({ previewRef }) => {
 
   return (
     <div className="col-span-2 order-1">
-      <div className="bg-white md:rounded-xl border border-blue-400 overflow-hidden">
+      <div className="bg-white md:rounded-xl border" style={{ borderColor: '#60A5FA' }}>
         {/* Header */}
-        <div className="bg-blue-600 text-white p-4 flex items-center gap-2">
+        <div
+          className="p-4 flex items-center gap-2"
+          style={{ backgroundColor: '#2563EB', color: '#FFFFFF' }}
+        >
           <FaFilePdf className="text-lg" />
           <h2 className="text-lg font-semibold">Offer Letter Preview - {category}</h2>
         </div>
 
         {/* Letter Container */}
-        <div className="flex justify-center bg-gray-100 p-4">
+        <div className="flex justify-center p-4" style={{ backgroundColor: '#F3F4F6' }}>
           <div
             ref={previewRef}
-            className="bg-white w-full max-w-[794px] min-h-[1123px] p-6 sm:p-8 md:p-12 shadow-md border border-gray-200 relative"
+            className="w-full max-w-[794px] min-h-[1123px] p-6 sm:p-8 md:p-12 shadow-md border relative bg-white"
             style={{
+              borderColor: '#E5E7EB',
               fontFamily: 'serif',
             }}
           >
             {/* Company Header */}
-            <div className="text-center mb-8 border-b pb-6">
+            <div className="text-center mb-8 border-b pb-6" style={{ borderColor: '#D1D5DB' }}>
               <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4">
                 <Image
                   src="/images/LokaciLogo.png"
@@ -60,19 +64,21 @@ const LetterPreview = ({ previewRef }) => {
                   className="rounded-full"
                 />
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">The Salon Company</h1>
-              <p className="text-gray-600">Professional Services</p>
-              <p className="text-xs sm:text-sm text-gray-500">
+              <h1 className="text-xl sm:text-2xl font-bold" style={{ color: '#111827' }}>
+                The Salon Company
+              </h1>
+              <p style={{ color: '#4B5563' }}>Professional Services</p>
+              <p className="text-xs sm:text-sm" style={{ color: '#6B7280' }}>
                 Lokaci H.Q., Sector 117, Noida | Phone: (555) 123-4567
               </p>
             </div>
 
             {/* Date */}
-            <div className="text-right text-xs sm:text-sm text-gray-500 mb-8">
+            <div className="text-right text-xs sm:text-sm mb-8" style={{ color: '#6B7280' }}>
               {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
 
-            <div className="text-gray-800 leading-7 space-y-6 text-sm sm:text-base">
+            <div className="leading-7 space-y-6 text-sm sm:text-base" style={{ color: '#1F2937' }}>
               <p className="font-semibold">{formData.candidateName || '[Candidate Name]'}</p>
 
               <p className="font-semibold text-base sm:text-lg">Subject: Offer of Employment</p>
@@ -106,28 +112,28 @@ const LetterPreview = ({ previewRef }) => {
                 <p>Sincerely,</p>
                 <div className="mt-6">
                   <p className="font-semibold">{formData.hrManagerName || '[HR Manager Name]'}</p>
-                  <p className="text-xs sm:text-sm text-gray-500">Human Resources Manager</p>
-                  <p className="text-xs sm:text-sm text-gray-500">Lokaci Private Limited</p>
+                  <p className="text-xs sm:text-sm" style={{ color: '#6B7280' }}>Human Resources Manager</p>
+                  <p className="text-xs sm:text-sm" style={{ color: '#6B7280' }}>Lokaci Private Limited</p>
                 </div>
               </div>
 
               {/* Candidate Acceptance */}
-              <div className="mt-16 pt-6 border-t">
+              <div className="mt-16 pt-6 border-t" style={{ borderColor: '#D1D5DB' }}>
                 <p className="text-sm font-semibold mb-4">Candidate Acceptance:</p>
                 <div className="grid grid-cols-2 gap-8">
-                  <div className="border-b border-gray-400 pb-1">
-                    <span className="text-xs sm:text-sm text-gray-500">Signature</span>
+                  <div className="border-b pb-1" style={{ borderColor: '#9CA3AF' }}>
+                    <span className="text-xs sm:text-sm" style={{ color: '#6B7280' }}>Signature</span>
                   </div>
-                  <div className="border-b border-gray-400 pb-1">
-                    <span className="text-xs sm:text-sm text-gray-500">Date</span>
+                  <div className="border-b pb-1" style={{ borderColor: '#9CA3AF' }}>
+                    <span className="text-xs sm:text-sm" style={{ color: '#6B7280' }}>Date</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Page Footer */}
-            <div className="absolute bottom-4 right-4 text-xs text-gray-400">
-              Page 1 of 1
+            <div className="absolute bottom-4 right-4 text-xs" style={{ color: '#9CA3AF' }}>
+              Pages
             </div>
           </div>
         </div>
