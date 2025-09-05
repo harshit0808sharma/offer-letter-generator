@@ -54,3 +54,15 @@ button{
 .rotateY-0 {
   transform: rotateY(0deg);
 }
+
+/* Apply to sections inside your letter */
+.break-page {
+  page-break-inside: avoid; /* Avoid splitting inside this block */
+}
+
+/* Ensure container expands naturally */
+.preview-container {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}

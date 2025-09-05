@@ -4,12 +4,15 @@ import { useRouter } from "next/navigation";
 import { createContext, useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [category, setCategory] = useState("Full-Time");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [pages, setPages] = useState([]);
   const [formData, setFormData] = useState({
     candidateName: "",
     jobTitle: "",
@@ -86,31 +89,53 @@ export const AppProvider = ({ children }) => {
     router.push("/generator");
   };
 
-  const generatePDF = async () => {
-    if (!formData.candidateName || !formData.jobTitle || !formData.joiningDate || !formData.location || !formData.salary || !formData.hrManagerName) {
-      toast.error("Please fill in all required fields before generating the letter.");
-      return;
+const generatePDF = async () => {
+  if (
+    !formData.candidateName ||
+    !formData.jobTitle ||
+    !formData.joiningDate ||
+    !formData.location ||
+    !formData.salary ||
+    !formData.hrManagerName
+  ) {
+    toast.error("Please fill in all required fields before generating the letter.");
+    return;
+  }
+
+  try {
+    const pages = document.querySelectorAll(".page");
+    const pdf = new jsPDF("p", "pt", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 20;
+
+    for (let i = 0; i < pages.length; i++) {
+      const canvas = await html2canvas(pages[i], { scale: 2, scrollY: -window.scrollY });
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+      const imgWidth = pageWidth - margin * 2;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, "JPEG", margin, margin, imgWidth, imgHeight);
+
+      // Optional: Add header/footer
+      pdf.setFontSize(12);
+      // pdf.text("The Salon Company - Offer Letter", pageWidth / 2, 30, { align: "center" });
+      pdf.setFontSize(10);
+      pdf.text(`Page ${i + 1}`, pageWidth / 2, pageHeight - 20, { align: "center" });
     }
 
-    try {
-      const html2pdf = (await import("html2pdf.js")).default;
-      const element = previewRef.current;
-      const options = {
-        margin: 0.5,
-        filename: `${formData.candidateName}_Offer_Letter.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-      };
+    pdf.save(`${formData.candidateName}_Offer_Letter.pdf`);
+    saveToRecentLetters();
+    toast.success("Offer letter generated and saved to recent!");
+  } catch (error) {
+    console.error(error);
+    toast.error("Error generating PDF. Please try again.");
+  }
+};
 
-      await html2pdf().set(options).from(element).save();
-      saveToRecentLetters();
-      toast.success("Offer letter generated and saved to recent!");
-    } catch (error) {
-      toast.error("Error generating PDF. Please try again.");
-      console.error("PDF generation error:", error);
-    }
-  };
+
 
   const saveToRecentLetters = () => {
     const newLetter = {

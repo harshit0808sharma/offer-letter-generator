@@ -10,7 +10,7 @@ import { AppContext } from "@/app/context/AppContext";
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const pathname = usePathname(); // Get current page path
+  const pathname = usePathname();
   const { isAuthenticated, setIsAuthenticated, setCookieExists, cookieExists } =
     useContext(AppContext);
 
