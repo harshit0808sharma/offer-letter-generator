@@ -17,7 +17,7 @@ const Header = () => {
   useEffect(() => {
     const token = Cookies.get("authToken");
     if (token) setIsAuthenticated(true);
-  }, []);
+  }, [setIsAuthenticated]);
 
   const handleLogout = async () => {
     await fetch("/api/logout", { method: "POST" });

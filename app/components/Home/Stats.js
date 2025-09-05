@@ -15,13 +15,10 @@ const MissionSection = () => {
           <div>
             <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
             <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-              Our goal is to make offer letter generation fast, accurate, and stress-free for salon companies. 
-              With our platform, you can create fully customized letters in minutes, ensuring professionalism 
-              and consistency for every candidate.
+              {"Our goal is to make offer letter generation fast, accurate, and stress-free for salon companies. With our platform, you can create fully customized letters in minutes, ensuring professionalism and consistency for every candidate."}
             </p>
             <p className="text-gray-500 leading-relaxed">
-              Whether you're hiring full-time employees, interns, or contractors, our tool adapts to your needs. 
-              Save time, avoid manual errors, and impress your new hires with beautifully designed offer letters.
+              {"Whether you're hiring full-time employees, interns, or contractors, our tool adapts to your needs. Save time, avoid manual errors, and impress your new hires with beautifully designed offer letters."}
             </p>
           </div>
 

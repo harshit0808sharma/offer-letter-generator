@@ -44,7 +44,7 @@ const Hero = () => {
       setFlipIndex((prev) => (prev + 1) % cardData.length);
     }, 3000); // Change every 3 seconds
     return () => clearInterval(interval);
-  }, []);
+  }, [cardData.length]);
 
   return (
     <section className="min-h-screen relative pt-20 pb-32 overflow-hidden bg-gray-50">
