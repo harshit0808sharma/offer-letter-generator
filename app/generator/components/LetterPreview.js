@@ -58,8 +58,24 @@ const LetterPreview = ({ previewRef }) => {
                 pageBreakAfter: 'always',
                 display: 'flex',
                 flexDirection: 'column',
+                position: "relative"
               }}
             >
+              <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+                style={{
+                  opacity: 0.2,
+                  transform: 'rotate(45deg)', 
+                }}
+              >
+                <Image
+                  src="/images/LokaciWatermark.png"
+                  alt="Watermark"
+                  unoptimized
+                  width={600}  
+                  height={600} 
+                />
+              </div>
               {/* Page 1 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
@@ -142,8 +158,24 @@ const LetterPreview = ({ previewRef }) => {
                 pageBreakAfter: 'always',
                 display: 'flex',
                 flexDirection: 'column',
+                position: "relative"
               }}
             >
+              <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+                style={{
+                  opacity: 0.2,
+                  transform: 'rotate(45deg)', 
+                }}
+              >
+                <Image
+                  src="/images/LokaciWatermark.png"
+                  alt="Watermark"
+                  unoptimized
+                  width={600}  
+                  height={600} 
+                />
+              </div>
               {/* Page 2 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
@@ -234,8 +266,24 @@ const LetterPreview = ({ previewRef }) => {
                 minHeight: '1123px',
                 display: 'flex',
                 flexDirection: 'column',
+                position: "relative"
               }}
             >
+              <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+                style={{
+                  opacity: 0.2,
+                  transform: 'rotate(45deg)', 
+                }}
+              >
+                <Image
+                  src="/images/LokaciWatermark.png"
+                  alt="Watermark"
+                  unoptimized
+                  width={600}  
+                  height={600} 
+                />
+              </div>
               {/* Page 3 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
