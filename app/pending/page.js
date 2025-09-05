@@ -11,7 +11,7 @@ export default function PendingPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-r from-blue-100/50 to-indigo-100/50 py-8 px-4 sm:px-6">
+      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6">
         <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 text-center sm:text-left">
           Our Pending Offer Letters
         </h1>

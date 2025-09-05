@@ -38,3 +38,19 @@ button{
 .btn-primary {
   @apply w-full text-white py-4 px-6 rounded-lg font-semibold text-lg flex items-center justify-center gap-3 transform hover:scale-105 transition-all shadow-lg;
 }
+
+.perspective {
+  perspective: 1500px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotateY-180 {
+  transform: rotateY(180deg);
+}
+
+.rotateY-0 {
+  transform: rotateY(0deg);
+}

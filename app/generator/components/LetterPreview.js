@@ -23,7 +23,7 @@ const LetterPreview = ({ previewRef }) => {
 
   const formatSalary = (salary) => {
     if (!salary) return '[Salary]';
-    return `$${parseFloat(salary).toLocaleString()}`;
+    return `₹${parseFloat(salary).toLocaleString()}`;
   };
 
   const employmentTypeText =
@@ -33,7 +33,7 @@ const LetterPreview = ({ previewRef }) => {
 
   return (
     <div className="col-span-2 order-1">
-      <div className="bg-white md:rounded-xl border" style={{ borderColor: '#60A5FA' }}>
+      <div className="bg-white md:rounded-xl overflow-hidden border" style={{ borderColor: '#60A5FA' }}>
         {/* Header */}
         <div
           className="p-4 flex items-center gap-2"
@@ -102,7 +102,7 @@ const LetterPreview = ({ previewRef }) => {
                 Please confirm your acceptance of this offer by signing and returning this letter by{' '}
                 {formData.joiningDate
                   ? new Date(new Date(formData.joiningDate).getTime() - 7 * 24 * 60 * 60 * 1000)
-                      .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                    .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
                   : '[One week before joining date]'}
                 . We look forward to welcoming you to our team!
               </p>

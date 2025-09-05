@@ -15,16 +15,12 @@ import Footer from "../components/Layout/Footer";
 
 const RecentLetters = () => {
   const [recentLetters, setRecentLetters] = useState([]);
-
-  // Load from localStorage on page load
   useEffect(() => {
     const stored = localStorage.getItem("recentLetters");
     if (stored) {
       setRecentLetters(JSON.parse(stored));
     }
   }, []);
-
-  // Clear all letters from localStorage
   const clearAllLetters = () => {
     if (recentLetters.length === 0) {
       toast.info("No letters to clear");
@@ -39,7 +35,7 @@ const RecentLetters = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-r from-blue-100/50 to-indigo-100/50 py-8 px-4 sm:px-6">
+      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header Section */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
@@ -61,7 +57,6 @@ const RecentLetters = () => {
             </button>
           </div>
 
-          {/* Recent Letters List */}
           {recentLetters.length === 0 ? (
             <div className="text-center text-gray-500 mt-10 text-sm sm:text-base">
               No recent letters found. Generate one to see it here.

@@ -26,17 +26,10 @@ export default function LoginPage() {
 
             if (res.ok) {
                 const data = await res.json();
-
-                // Set auth cookie
                 Cookies.set("authToken", data.token, { path: "/", expires: 1 });
-                console.log("Cookies after login:", Cookies.get());
-
-                // Update context
                 setIsAuthenticated(true);
                 setCookieExists("exists");
-
-                // Save to localStorage with 24-hour expiry
-                const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+                const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
                 localStorage.setItem(
                     "cookieExists",
                     JSON.stringify({ value: "exists", expiresAt })

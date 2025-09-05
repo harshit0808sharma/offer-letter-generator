@@ -142,19 +142,27 @@ const SidebarForm = () => {
           <div className="flex flex-col gap-3 mt-6">
             <button
               onClick={generatePDF}
-              className="btn-primary bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 flex items-center justify-center gap-2"
+              className="relative inline-flex gap-2 items-center justify-center px-6 py-3 overflow-hidden font-medium transition-all bg-red-500 rounded-xl group"
             >
-              <FaFilePdf className="text-xl" />
-              Generate PDF
-            </button>
+              <span className="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-red-700 rounded group-hover:-mr-4 group-hover:-mt-4">
+                <span className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"></span>
+              </span>
+              <span className="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full translate-y-full bg-red-600 rounded-2xl group-hover:mb-12 group-hover:translate-x-0"></span>
 
+              {/* Icon + Text in a row */}
+              <span className="relative inline-flex items-center gap-2 text-white transition-colors duration-200 ease-in-out group-hover:text-white">
+                <FaFilePdf className="text-xl" />
+                <span>Generate PDF</span>
+              </span>
+            </button>
             <button
               onClick={savePendingLetter}
-              className="btn-primary bg-yellow-500 hover:bg-yellow-600 flex items-center justify-center gap-2"
+              className="px-6 py-3 bg-green-600 hover:bg-green-700 flex items-center justify-center gap-2 text-white rounded-xl transition-colors duration-200"
             >
               <FaSave className="text-xl" />
-              Save to Pending
+              <span>Save to Pending</span>
             </button>
+
           </div>
         </div>
       </div>
