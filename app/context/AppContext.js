@@ -146,6 +146,7 @@ export const AppProvider = ({ children }) => {
           img.onerror = () => reject(new Error("Image load error"));
           img.src = src;
         });
+        
 
       let watermarkImgEl;
       try {
