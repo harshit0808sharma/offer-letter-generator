@@ -1,8 +1,10 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "@/app/context/AppContext";
 import { jobCategories } from "@/app/assets/data";
+import { MdDelete, MdExpandMore } from "react-icons/md";
+import { MdExpandLess } from "react-icons/md";
 import {
   FaUser,
   FaCalendarAlt,
@@ -12,15 +14,21 @@ import {
   FaFilePdf,
   FaSave,
   FaBriefcase,
+  FaClock,
+  FaEnvelope,
+  FaPhone,
+  FaBuilding,
+  FaFileAlt,
 } from "react-icons/fa";
 
 const SidebarForm = () => {
-  const { formData, handleInputChange, generatePDF, category, savePendingLetter } =
+  const { formData, setFormData, handleInputChange, generatePDF, category, savePendingLetter } =
     useContext(AppContext);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="order-1 p-4">
-      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+    <div className="order-1">
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 max-h-[159vh] overflow-y-scroll scrollbar-none">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
           <FaUser className="text-blue-500" />
           Candidate Information
@@ -40,6 +48,22 @@ const SidebarForm = () => {
               placeholder="Enter candidate's full name"
               className="form-input w-full"
             />
+          </div>
+          <div>
+            <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+              <FaBriefcase className="text-gray-500" />
+              Employment Type
+            </label>
+            <select
+              value={formData.employmentType}
+              onChange={(e) => handleInputChange("employmentType", e.target.value)}
+              className="form-input w-full"
+            >
+              <option value="">Select Employment Type</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Internship">Internship</option>
+              <option value="Contract">Contract</option>
+            </select>
           </div>
 
           {/* Internship Duration */}
@@ -137,6 +161,161 @@ const SidebarForm = () => {
               className="form-input w-full"
             />
           </div>
+          {
+            menuOpen ? (
+              <><div>
+                <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                  <FaBuilding className="text-gray-500" />
+                  Company Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.companyName || ""}
+                  onChange={(e) => handleInputChange("companyName", e.target.value)}
+                  placeholder="e.g., The Salon Company"
+                  className="form-input w-full"
+                />
+              </div>
+
+                {/* Company Address */}
+                <div>
+                  <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                    <FaMapMarkerAlt className="text-gray-500" />
+                    Company Address
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.companyAddress || ""}
+                    onChange={(e) => handleInputChange("companyAddress", e.target.value)}
+                    placeholder="e.g., Lokaci H.Q., Sector 117, Noida"
+                    className="form-input w-full"
+                  />
+                </div>
+
+                {/* Company Phone */}
+                <div>
+                  <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                    <FaPhone className="text-gray-500" />
+                    Company Phone
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.companyPhone || ""}
+                    onChange={(e) => handleInputChange("companyPhone", e.target.value)}
+                    placeholder="e.g., (555) 123-4567"
+                    className="form-input w-full"
+                  />
+                </div>
+
+                {/* Company Email */}
+                <div>
+                  <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                    <FaEnvelope className="text-gray-500" />
+                    Company Email
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.companyEmail || ""}
+                    onChange={(e) => handleInputChange("companyEmail", e.target.value)}
+                    placeholder="e.g., hr@lokaci.com"
+                    className="form-input w-full"
+                  />
+                </div>
+                <div>
+                  <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                    <FaClock className="text-gray-500" />
+                    Office Hours
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.officeHours || ""}
+                    onChange={(e) => handleInputChange("officeHours", e.target.value)}
+                    placeholder="e.g., Monday - Friday, 9:00 AM - 5:00 PM"
+                    className="form-input w-full"
+                  />
+                </div>
+
+                {/* Probation Period */}
+                <div>
+                  <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                    <FaClock className="text-gray-500" />
+                    Probation Period
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.probationPeriod || ""}
+                    onChange={(e) => handleInputChange("probationPeriod", e.target.value)}
+                    placeholder="e.g., 90 days"
+                    className="form-input w-full"
+                  />
+                </div>
+                {/* Required Documents */}
+                <div>
+                  <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <FaFileAlt className="text-gray-500" />
+                    Required Documents
+                  </label>
+                  <div className="space-y-2">
+                    {formData.documentsRequired?.map((doc, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={doc}
+                          onChange={(e) => {
+                            const newDocs = [...formData.documentsRequired];
+                            newDocs[index] = e.target.value;
+                            setFormData(prev => ({ ...prev, documentsRequired: newDocs }));
+                          }}
+                          placeholder={`Document ${index + 1}`}
+                          className="form-input w-full"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newDocs = formData.documentsRequired.filter((_, i) => i !== index);
+                            setFormData(prev => ({ ...prev, documentsRequired: newDocs }));
+                          }}
+                          className="p-1 bg-red-500 text-white rounded hover:bg-red-600"
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
+                    ))}
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData(prev => ({
+                          ...prev,
+                          documentsRequired: [...prev.documentsRequired, ""],
+                        }))
+                      }
+                      className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Add Document
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <MdExpandLess className={`text-gray-700 transition-transform duration-200 `} />
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center"
+                  onClick={() => setMenuOpen(true)}
+                >
+                  <MdExpandMore className={`text-gray-700 transition-transform duration-200`} />
+                </button>
+
+              </>
+            )
+          }
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3 mt-6">

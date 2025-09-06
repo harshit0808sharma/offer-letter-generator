@@ -19,7 +19,24 @@ export const AppProvider = ({ children }) => {
     location: "",
     salary: "",
     hrManagerName: "",
+    employmentType: "Full-time",
+    companyName: "The Salon Company",
+    companyAddress: "Lokaci H.Q., Sector 117, Noida",
+    companyPhone: "(555) 123-4567",
+    companyEmail: "hr@lokaci.com",
+    probationPeriod: "90 days",
+    workingHours: "Monday to Friday, 9:00 AM to 6:00 PM",
+    offerDeadline: "",
+    officeHours: "Monday - Friday, 9:00 AM - 5:00 PM",
+    documentsRequired: [
+      "Government-issued photo identification",
+      "Educational certificates and transcripts",
+      "Previous employment certificates (if applicable)",
+      "Address proof documents",
+      "Bank account details for salary processing",
+    ],
   });
+
   const [pendingLetters, setPendingLetters] = useState([]);
   const [cookieExists, setCookieExists] = useState("notExists");
   const router = useRouter();
@@ -51,7 +68,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     if (cookieExists === "exists") {
-      const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+      const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
       localStorage.setItem("cookieExists", JSON.stringify({ value: "exists", expiresAt }));
     } else {
       localStorage.removeItem("cookieExists");
@@ -88,95 +105,103 @@ export const AppProvider = ({ children }) => {
     router.push("/generator");
   };
 
-const generatePDF = async () => {
-  if (
-    !formData.candidateName ||
-    !formData.jobTitle ||
-    !formData.joiningDate ||
-    !formData.location ||
-    !formData.salary ||
-    !formData.hrManagerName
-  ) {
-    toast.error("Please fill in all required fields before generating the letter.");
-    return;
-  }
+  const generatePDF = async () => {
+    if (
+      !formData.candidateName ||
+      !formData.jobTitle ||
+      !formData.joiningDate ||
+      !formData.location ||
+      !formData.salary ||
+      !formData.hrManagerName ||
+      !formData.employmentType ||
+      !formData.companyName ||
+      !formData.companyAddress ||
+      !formData.companyPhone ||
+      !formData.companyEmail ||
+      !formData.probationPeriod ||
+      !formData.workingHours ||
+      !formData.officeHours
+    ) {
+      toast.error("Please fill in all required fields before generating the letter.");
+      return;
+    }
 
-  try {
-    const pages = document.querySelectorAll(".page");
-    const pdf = new jsPDF("p", "pt", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 20;
-
-    const watermarkSrc = "/images/LokaciWatermark.png"; 
-    const wmScale = 0.6; 
-    const wmRotationDeg = -45;
-    const wmAlpha = 0.12;
-
-    const loadImage = (src) =>
-      new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error("Image load error"));
-        img.src = src;
-      });
-
-    let watermarkImgEl;
     try {
-      watermarkImgEl = await loadImage(watermarkSrc);
-    } catch (err) {
-      const resp = await fetch(watermarkSrc);
-      const blob = await resp.blob();
-      const dataUrl = await new Promise((res) => {
-        const fr = new FileReader();
-        fr.onload = () => res(fr.result);
-        fr.readAsDataURL(blob);
-      });
-      watermarkImgEl = await loadImage(dataUrl);
+      const pages = document.querySelectorAll(".page");
+      const pdf = new jsPDF("p", "pt", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+
+      const watermarkSrc = "/images/logo.png";
+      const wmScale = 0.6;
+      const wmRotationDeg = -45;
+      const wmAlpha = 0.12;
+
+      const loadImage = (src) =>
+        new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error("Image load error"));
+          img.src = src;
+        });
+
+      let watermarkImgEl;
+      try {
+        watermarkImgEl = await loadImage(watermarkSrc);
+      } catch (err) {
+        const resp = await fetch(watermarkSrc);
+        const blob = await resp.blob();
+        const dataUrl = await new Promise((res) => {
+          const fr = new FileReader();
+          fr.onload = () => res(fr.result);
+          fr.readAsDataURL(blob);
+        });
+        watermarkImgEl = await loadImage(dataUrl);
+      }
+
+      for (let i = 0; i < pages.length; i++) {
+        const canvas = await html2canvas(pages[i], { scale: 2, scrollY: -window.scrollY });
+
+        const finalCanvas = document.createElement("canvas");
+        finalCanvas.width = canvas.width;
+        finalCanvas.height = canvas.height;
+        const ctx = finalCanvas.getContext("2d");
+
+        ctx.drawImage(canvas, 0, 0);
+
+        const wmWidthPx = finalCanvas.width * wmScale;
+        const aspect = watermarkImgEl.height / watermarkImgEl.width;
+        const wmHeightPx = wmWidthPx * aspect;
+
+        ctx.save();
+        ctx.globalAlpha = wmAlpha;
+        ctx.translate(finalCanvas.width / 2, finalCanvas.height / 2);
+        // ctx.rotate((wmRotationDeg * Math.PI) / 180);
+        ctx.drawImage(watermarkImgEl, -wmWidthPx / 2, -wmHeightPx / 2, wmWidthPx, wmHeightPx);
+        ctx.restore();
+        ctx.globalAlpha = 1;
+
+        const imgData = finalCanvas.toDataURL("image/jpeg", 1.0);
+        const imgWidth = pageWidth - margin * 2;
+        const imgHeight = (finalCanvas.height * imgWidth) / finalCanvas.width;
+
+        if (i > 0) pdf.addPage();
+        pdf.addImage(imgData, "JPEG", margin, margin, imgWidth, imgHeight);
+
+        pdf.setFontSize(10);
+        pdf.text(`Page ${i + 1}`, pageWidth / 2, pageHeight - 20, { align: "center" });
+      }
+
+      pdf.save(`${formData.candidateName}_Offer_Letter.pdf`);
+      saveToRecentLetters();
+      toast.success("Offer letter generated and saved to recent!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error generating PDF. Please try again.");
     }
-
-    for (let i = 0; i < pages.length; i++) {
-      const canvas = await html2canvas(pages[i], { scale: 2, scrollY: -window.scrollY });
-
-      const finalCanvas = document.createElement("canvas");
-      finalCanvas.width = canvas.width;
-      finalCanvas.height = canvas.height;
-      const ctx = finalCanvas.getContext("2d");
-
-      ctx.drawImage(canvas, 0, 0);
-
-      const wmWidthPx = finalCanvas.width * wmScale;
-      const aspect = watermarkImgEl.height / watermarkImgEl.width;
-      const wmHeightPx = wmWidthPx * aspect;
-
-      ctx.save();
-      ctx.globalAlpha = wmAlpha;
-      ctx.translate(finalCanvas.width / 2, finalCanvas.height / 2);
-      ctx.rotate((wmRotationDeg * Math.PI) / 180);
-      ctx.drawImage(watermarkImgEl, -wmWidthPx / 2, -wmHeightPx / 2, wmWidthPx, wmHeightPx);
-      ctx.restore();
-      ctx.globalAlpha = 1;
-
-      const imgData = finalCanvas.toDataURL("image/jpeg", 1.0);
-      const imgWidth = pageWidth - margin * 2;
-      const imgHeight = (finalCanvas.height * imgWidth) / finalCanvas.width;
-
-      if (i > 0) pdf.addPage();
-      pdf.addImage(imgData, "JPEG", margin, margin, imgWidth, imgHeight);
-
-      pdf.setFontSize(10);
-      pdf.text(`Page ${i + 1}`, pageWidth / 2, pageHeight - 20, { align: "center" });
-    }
-
-    pdf.save(`${formData.candidateName}_Offer_Letter.pdf`);
-    saveToRecentLetters();
-    toast.success("Offer letter generated and saved to recent!");
-  } catch (error) {
-    console.error(error);
-    toast.error("Error generating PDF. Please try again.");
-  }
-};
+  };
 
 
 

@@ -40,11 +40,11 @@ const LetterPreview = ({ previewRef }) => {
           style={{ backgroundColor: '#2563EB', color: '#FFFFFF' }}
         >
           <FaFilePdf className="text-lg" />
-          <h2 className="text-lg font-semibold">Offer Letter Preview - {category}</h2>
+          <h2 className="text-lg font-semibold">Offer Letter Preview - {formData.employmentType || '[Employement Type]'}</h2>
         </div>
 
         {/* Letter Container */}
-        <div className="flex justify-center p-4" style={{ backgroundColor: '#F3F4F6' }}>
+        <div className="flex justify-center p-4 max-h-[159vh] overflow-y-scroll" style={{ backgroundColor: '#F3F4F6' }}>
           <div ref={previewRef} className="space-y-6">
 
             {/* PAGE 1 */}
@@ -89,11 +89,11 @@ const LetterPreview = ({ previewRef }) => {
                   />
                 </div>
                 <h1 className="text-xl font-bold mb-2" style={{ color: '#111827' }}>
-                  The Salon Company
+                  {formData.companyName || '[Company Name]'}
                 </h1>
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
                 <p className="text-xs" style={{ color: '#6B7280' }}>
-                  Lokaci H.Q., Sector 117, Noida | Phone: (555) 123-4567
+                  {formData.companyAddress || '[Company Address]'} | Phone: {formData.companyPhone || '[Company Phone]'}
                 </p>
               </div>
 
@@ -125,7 +125,7 @@ const LetterPreview = ({ previewRef }) => {
                       <p><strong>Start Date:</strong> {formatDate(formData.joiningDate)}</p>
                       <p><strong>Work Location:</strong> {formData.location || '[Work Location]'}</p>
                       <p><strong>Annual Salary:</strong> {formatSalary(formData.salary)} per year</p>
-                      <p><strong>Employment Type:</strong> {employmentTypeText}</p>
+                      <p><strong>Employment Type:</strong> {formData.employmentType}</p>
                     </div>
                   </div>
 
@@ -189,11 +189,11 @@ const LetterPreview = ({ previewRef }) => {
                   />
                 </div>
                 <h1 className="text-xl font-bold mb-2" style={{ color: '#111827' }}>
-                  The Salon Company
+                  {formData.companyName || '[Company Name]'}
                 </h1>
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
                 <p className="text-xs" style={{ color: '#6B7280' }}>
-                  Lokaci H.Q., Sector 117, Noida | Phone: (555) 123-4567
+                  {formData.companyAddress || '[Company Address]'} | Phone: {formData.companyPhone || '[Company Phone]'}
                 </p>
               </div>
 
@@ -297,11 +297,11 @@ const LetterPreview = ({ previewRef }) => {
                   />
                 </div>
                 <h1 className="text-xl font-bold mb-2" style={{ color: '#111827' }}>
-                  The Salon Company
+                  {formData.companyName || '[Company Name]'}
                 </h1>
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
                 <p className="text-xs" style={{ color: '#6B7280' }}>
-                  Lokaci H.Q., Sector 117, Noida | Phone: (555) 123-4567
+                  {formData.companyAddress || '[Company Address]'} | Phone: {formData.companyPhone || '[Company Phone]'}
                 </p>
               </div>
 
@@ -323,21 +323,20 @@ const LetterPreview = ({ previewRef }) => {
                   <div>
                     <p className="font-semibold mb-3">Required Documents (Please bring on first day):</p>
                     <ul className="ml-6 space-y-1" style={{ listStyleType: 'disc' }}>
-                      <li>Government-issued photo identification</li>
-                      <li>Educational certificates and transcripts</li>
-                      <li>Previous employment certificates (if applicable)</li>
-                      <li>Address proof documents</li>
-                      <li>Bank account details for salary processing</li>
+                      {formData.documentsRequired?.map((doc, index) => (
+                        <li key={index}>{doc}</li>
+                      ))}
                     </ul>
                   </div>
+
 
                   <div>
                     <p className="font-semibold mb-2">Contact Information:</p>
                     <p className="mb-2">For any questions regarding this offer, please contact:</p>
                     <div className="ml-4">
-                      <p><strong>Email:</strong> hr@lokaci.com</p>
-                      <p><strong>Phone:</strong> (555) 123-4567</p>
-                      <p><strong>Office Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM</p>
+                      <p><strong>Email:</strong> {formData.companyEmail || '[Company Email]'}</p>
+                      <p><strong>Phone:</strong> {formData.companyPhone || '[Company Phone]'}</p>
+                      <p><strong>Office Hours:</strong> {formData.officeHours || '[Office Hours]'}</p>
                     </div>
                   </div>
 

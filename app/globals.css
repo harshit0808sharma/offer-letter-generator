@@ -13,6 +13,9 @@ button{
   width: 8px; 
   height: 8px; 
 }
+.scrollbar-none::-webkit-scrollbar{
+  display: none;
+}
 
 ::-webkit-scrollbar-track {
   background: #f1f1f1; 
