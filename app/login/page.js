@@ -40,7 +40,7 @@ export default function LoginPage() {
                     autoClose: 2000,
                 });
 
-                setTimeout(() => router.push("/"), 2000);
+                setTimeout(() => router.push("/"), 1000);
             } else {
                 toast.error("Access denied. Only admin can login.", {
                     position: "top-right",
@@ -59,6 +59,9 @@ export default function LoginPage() {
             <div className="flex flex-col md:flex-row shadow-[0_0_10px_0_rgba(0,0,0,0.3)] rounded-none md:rounded-2xl overflow-hidden w-full max-w-5xl">
                 <div className="flex-1 flex items-center justify-center bg-white px-8 py-12">
                     <div className="w-full max-w-md">
+                        {/* <div className="flex items-center mb-8">
+                            <Image src="/images/LokaciLogo.png" alt="logo image" width={48} height={48} className="w-24 h-20"/>
+                        </div> */}
                         <div className="flex items-center mb-8">
                             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
                                 <HiUsers className="w-5 h-5 text-white" />
