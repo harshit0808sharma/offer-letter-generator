@@ -2,12 +2,35 @@
 
 import { AppContext } from '@/app/context/AppContext';
 import Image from 'next/image';
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
 import { categoryTemplates } from '@/app/assets/data';
 
 const LetterPreview = ({ previewRef }) => {
-  const { category, formData } = useContext(AppContext);
+  const { formData, activeField, fieldRefs } = useContext(AppContext);
+  const containerRef = useRef(null);
+
+
+  useEffect(() => {
+    if (!activeField) return;
+    const fieldEl = fieldRefs[activeField]?.current;
+    const containerEl = containerRef.current;
+
+    if (fieldEl && containerEl) {
+      const fieldTop = fieldEl.offsetTop;
+      const fieldBottom = fieldTop + fieldEl.offsetHeight;
+      const containerTop = containerEl.scrollTop;
+      const containerBottom = containerTop + containerEl.clientHeight;
+
+      // Scroll only if the field is out of view
+      if (fieldTop < containerTop) {
+        containerEl.scrollTop = fieldTop - 20; // add small padding
+      } else if (fieldBottom > containerBottom) {
+        containerEl.scrollTop = fieldBottom - containerEl.clientHeight + 20;
+      }
+    }
+  }, [formData, activeField]);
+
 
   const roleDescription = categoryTemplates[formData.jobTitle] || categoryTemplates.Default;
 
@@ -26,10 +49,6 @@ const LetterPreview = ({ previewRef }) => {
     return `₹${parseFloat(salary).toLocaleString()}`;
   };
 
-  const employmentTypeText =
-    category === 'Internship'
-      ? `Internship (${formData.duration || '[Duration]'} months)`
-      : 'Full-time';
 
   return (
     <div className="col-span-2 order-2">
@@ -44,7 +63,7 @@ const LetterPreview = ({ previewRef }) => {
         </div>
 
         {/* Letter Container */}
-        <div className="flex justify-center p-4 max-h-[159vh] overflow-y-scroll" style={{ backgroundColor: '#F3F4F6' }}>
+        <div ref={containerRef} className="flex justify-center p-4 max-h-[159vh] overflow-y-scroll scrollbar-none" style={{ backgroundColor: '#F3F4F6' }}>
           <div ref={previewRef} className="space-y-6">
 
             {/* PAGE 1 */}
@@ -61,21 +80,6 @@ const LetterPreview = ({ previewRef }) => {
                 position: "relative"
               }}
             >
-              {/* <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
-                style={{
-                  opacity: 0.1,
-                  transform: 'rotate(-45deg)', 
-                }}
-              >
-                <Image
-                  src="/images/LokaciWatermark.png"
-                  alt="Watermark"
-                  unoptimized
-                  width={600}  
-                  height={600} 
-                />
-              </div> */}
               {/* Page 1 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
@@ -88,11 +92,11 @@ const LetterPreview = ({ previewRef }) => {
                     className="rounded-full"
                   />
                 </div>
-                <h1 className="text-xl font-bold mb-2" style={{ color: '#111827' }}>
+                <h1 ref={(el) => (fieldRefs.current.companyName = el)} className="text-xl font-bold mb-2" style={{ color: '#111827' }}>
                   {formData.companyName || '[Company Name]'}
                 </h1>
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
-                <p className="text-xs" style={{ color: '#6B7280' }}>
+                <p ref={(el) => (fieldRefs.current.companyAddress = el)} className="text-xs" style={{ color: '#6B7280' }}>
                   {formData.companyAddress || '[Company Address]'} | Phone: {formData.companyPhone || '[Company Phone]'}
                 </p>
               </div>
@@ -104,13 +108,13 @@ const LetterPreview = ({ previewRef }) => {
                 </div>
 
                 <div className="space-y-6 text-sm leading-7" style={{ color: '#1F2937' }}>
-                  <p className="font-semibold text-base">{formData.candidateName || '[Candidate Name]'}</p>
+                  <p ref={(el) => (fieldRefs.current.candidateName = el)} className="font-semibold text-base">{formData.candidateName || '[Candidate Name]'}</p>
 
                   <p className="font-semibold text-lg">Subject: Offer of Employment</p>
 
                   <p>Dear {formData.candidateName || '[Candidate Name]'},</p>
 
-                  <p>{roleDescription}</p>
+                  <p >{roleDescription}</p>
 
                   <p>
                     We are pleased to extend this offer of employment to you for the position detailed below.
@@ -121,11 +125,15 @@ const LetterPreview = ({ previewRef }) => {
                   <div>
                     <p className="font-semibold mb-4">Position Details:</p>
                     <div className="p-4 rounded border space-y-2" style={{ backgroundColor: '#F9FAFB', borderColor: '#E5E7EB' }}>
-                      <p><strong>Job Title:</strong> {formData.jobTitle || '[Job Title]'}</p>
-                      <p><strong>Start Date:</strong> {formatDate(formData.joiningDate)}</p>
-                      <p><strong>Work Location:</strong> {formData.location || '[Work Location]'}</p>
-                      <p><strong>Annual Salary:</strong> {formatSalary(formData.salary)} per year</p>
-                      <p><strong>Employment Type:</strong> {formData.employmentType}</p>
+                      <p ref={(el) => (fieldRefs.current.jobTitle = el)}><strong>Job Title:</strong> {formData.jobTitle || '[Job Title]'}</p>
+                      <p ref={(el) => (fieldRefs.current.joiningDate = el)}><strong>Start Date:</strong> {formatDate(formData.joiningDate)}</p>
+                      <p ref={(el) => (fieldRefs.current.location = el)}>
+                        <strong>Work Location:</strong> {formData.location || '[Work Location]'}
+                      </p>
+                      <p ref={(el) => (fieldRefs.current.salary = el)}><strong>Annual Salary:</strong> {formatSalary(formData.salary)} per year</p>
+                      <p ref={(el) => (fieldRefs.current.employmentType = el)}>
+                        <strong>Employment Type:</strong> {formData.employmentType || '[Employment Type]'}
+                      </p>
                     </div>
                   </div>
 
@@ -161,21 +169,6 @@ const LetterPreview = ({ previewRef }) => {
                 position: "relative"
               }}
             >
-              {/* <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
-                style={{
-                  opacity: 0.1,
-                  transform: 'rotate(-45deg)', 
-                }}
-              >
-                <Image
-                  src="/images/LokaciWatermark.png"
-                  alt="Watermark"
-                  unoptimized
-                  width={600}  
-                  height={600} 
-                />
-              </div> */}
               {/* Page 2 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
@@ -269,21 +262,6 @@ const LetterPreview = ({ previewRef }) => {
                 position: "relative"
               }}
             >
-              {/* <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
-                style={{
-                  opacity: 0.1,
-                  transform: 'rotate(-45deg)', 
-                }}
-              >
-                <Image
-                  src="/images/LokaciWatermark.png"
-                  alt="Watermark"
-                  unoptimized
-                  width={600}  
-                  height={600} 
-                />
-              </div> */}
               {/* Page 3 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
@@ -310,7 +288,7 @@ const LetterPreview = ({ previewRef }) => {
                 <div className="space-y-6 text-sm leading-7" style={{ color: '#1F2937' }}>
                   <p>
                     Please confirm your acceptance of this offer by signing and returning this letter by{' '}
-                    <strong>
+                    <strong ref={(el) => (fieldRefs.current.joiningDate = el)}>
                       {formData.joiningDate
                         ? new Date(new Date(formData.joiningDate).getTime() - 7 * 24 * 60 * 60 * 1000)
                           .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -320,7 +298,7 @@ const LetterPreview = ({ previewRef }) => {
                     you will make to our continued success.
                   </p>
 
-                  <div>
+                  <div ref={(el) => (fieldRefs.current.documentsRequired = el)}>
                     <p className="font-semibold mb-3">Required Documents (Please bring on first day):</p>
                     <ul className="ml-6 space-y-1" style={{ listStyleType: 'disc' }}>
                       {formData.documentsRequired?.map((doc, index) => (
@@ -334,9 +312,9 @@ const LetterPreview = ({ previewRef }) => {
                     <p className="font-semibold mb-2">Contact Information:</p>
                     <p className="mb-2">For any questions regarding this offer, please contact:</p>
                     <div className="ml-4">
-                      <p><strong>Email:</strong> {formData.companyEmail || '[Company Email]'}</p>
-                      <p><strong>Phone:</strong> {formData.companyPhone || '[Company Phone]'}</p>
-                      <p><strong>Office Hours:</strong> {formData.officeHours || '[Office Hours]'}</p>
+                      <p ref={(el) => (fieldRefs.current.companyEmail = el)}><strong>Email:</strong> {formData.companyEmail || '[Company Email]'}</p>
+                      <p ref={(el) => (fieldRefs.current.companyPhone = el)}><strong>Phone:</strong> {formData.companyPhone || '[Company Phone]'}</p>
+                      <p ref={(el) => (fieldRefs.current.officeHours = el)}><strong>Office Hours:</strong> {formData.officeHours || '[Office Hours]'}</p>
                     </div>
                   </div>
 
@@ -345,7 +323,7 @@ const LetterPreview = ({ previewRef }) => {
                     <p className="mb-6">Sincerely,</p>
                     <div className="mb-8">
                       <div className="mb-2 w-48" style={{ borderBottom: '1px solid #9CA3AF' }}></div>
-                      <p className="font-semibold">{formData.hrManagerName || '[HR Manager Name]'}</p>
+                      <p ref={(el) => (fieldRefs.current.hrManagerName = el)} className="font-semibold">{formData.hrManagerName || '[HR Manager Name]'}</p>
                       <p className="text-xs" style={{ color: '#6B7280' }}>Human Resources Manager</p>
                       <p className="text-xs" style={{ color: '#6B7280' }}>Lokaci Private Limited</p>
                     </div>

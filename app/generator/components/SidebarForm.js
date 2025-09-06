@@ -22,8 +22,7 @@ import {
 } from "react-icons/fa";
 
 const SidebarForm = () => {
-  const { formData, setFormData, handleInputChange, generatePDF, category, savePendingLetter } =
-    useContext(AppContext);
+  const { formData, setFormData, handleInputChange, generatePDF, category, savePendingLetter, setActiveField } = useContext(AppContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -49,25 +48,22 @@ const SidebarForm = () => {
               className="form-input w-full"
             />
           </div>
-          <div>
-            <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
-              <FaBriefcase className="text-gray-500" />
-              Employment Type
-            </label>
-            <select
-              value={formData.employmentType}
-              onChange={(e) => handleInputChange("employmentType", e.target.value)}
-              className="form-input w-full"
-            >
-              <option value="">Select Employment Type</option>
-              <option value="Full-time">Full-time</option>
-              <option value="Internship">Internship</option>
-              <option value="Contract">Contract</option>
-            </select>
-          </div>
+          <select
+            value={formData.employmentType}
+            onChange={(e) => {
+              handleInputChange("employmentType", e.target.value);
+              setActiveField("employmentType");
+            }}
+            className="form-input w-full"
+          >
+            <option value="">Select Employment Type</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Internship">Internship</option>
+            <option value="Contract">Contract</option>
+          </select>
 
           {/* Internship Duration */}
-          {category === "Internship" && (
+          {(formData.employmentType === "Internship" || formData.employmentType === "Contract") && (
             <div>
               <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
                 <FaBriefcase className="text-gray-500" />
@@ -79,6 +75,8 @@ const SidebarForm = () => {
                 onChange={(e) => handleInputChange("duration", e.target.value)}
                 placeholder="e.g., 6"
                 className="form-input w-full"
+                onFocus={() => setActiveField("duration")}
+
               />
             </div>
           )}
@@ -91,7 +89,10 @@ const SidebarForm = () => {
             </label>
             <select
               value={formData.jobTitle}
-              onChange={(e) => handleInputChange("jobTitle", e.target.value)}
+              onChange={(e) => {
+                handleInputChange("jobTitle", e.target.value);
+                setActiveField("jobTitle")
+              }}
               className="form-input w-full"
             >
               <option value="">Select Job Title</option>
@@ -130,6 +131,7 @@ const SidebarForm = () => {
               placeholder="e.g., Noida, India"
               className="form-input w-full"
             />
+
           </div>
 
           {/* Salary */}
@@ -140,6 +142,7 @@ const SidebarForm = () => {
             </label>
             <input
               type="number"
+              onFocus={() => setActiveField("salary")}
               value={formData.salary}
               onChange={(e) => handleInputChange("salary", e.target.value)}
               placeholder={category === "Internship" ? "e.g., 5000" : "e.g., 20000"}
@@ -155,6 +158,7 @@ const SidebarForm = () => {
             </label>
             <input
               type="text"
+              onFocus={() => setActiveField("hrManagerName")}
               value={formData.hrManagerName}
               onChange={(e) => handleInputChange("hrManagerName", e.target.value)}
               placeholder="Enter HR manager's name"
@@ -170,6 +174,7 @@ const SidebarForm = () => {
                 </label>
                 <input
                   type="text"
+                  onFocus={() => setActiveField("companyName")}
                   value={formData.companyName || ""}
                   onChange={(e) => handleInputChange("companyName", e.target.value)}
                   placeholder="e.g., The Salon Company"
@@ -185,6 +190,7 @@ const SidebarForm = () => {
                   </label>
                   <input
                     type="text"
+                    onFocus={() => setActiveField("companyAddress")}
                     value={formData.companyAddress || ""}
                     onChange={(e) => handleInputChange("companyAddress", e.target.value)}
                     placeholder="e.g., Lokaci H.Q., Sector 117, Noida"
@@ -200,6 +206,7 @@ const SidebarForm = () => {
                   </label>
                   <input
                     type="text"
+                    onFocus={() => setActiveField("companyPhone")}
                     value={formData.companyPhone || ""}
                     onChange={(e) => handleInputChange("companyPhone", e.target.value)}
                     placeholder="e.g., (555) 123-4567"
@@ -215,6 +222,7 @@ const SidebarForm = () => {
                   </label>
                   <input
                     type="email"
+                    onFocus={() => setActiveField("companyEmail")}
                     value={formData.companyEmail || ""}
                     onChange={(e) => handleInputChange("companyEmail", e.target.value)}
                     placeholder="e.g., hr@lokaci.com"
@@ -228,6 +236,7 @@ const SidebarForm = () => {
                   </label>
                   <input
                     type="text"
+                    onFocus={() => setActiveField("officeHours")}
                     value={formData.officeHours || ""}
                     onChange={(e) => handleInputChange("officeHours", e.target.value)}
                     placeholder="e.g., Monday - Friday, 9:00 AM - 5:00 PM"
@@ -243,6 +252,7 @@ const SidebarForm = () => {
                   </label>
                   <input
                     type="text"
+                    onFocus={() => setActiveField("probationPeriod")}
                     value={formData.probationPeriod || ""}
                     onChange={(e) => handleInputChange("probationPeriod", e.target.value)}
                     placeholder="e.g., 90 days"
@@ -260,6 +270,8 @@ const SidebarForm = () => {
                       <div key={index} className="flex items-center gap-2">
                         <input
                           type="text"
+                          onFocus={() => setActiveField("documentsRequired")}
+
                           value={doc}
                           onChange={(e) => {
                             const newDocs = [...formData.documentsRequired];

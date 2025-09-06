@@ -13,7 +13,7 @@ export default function OfferLetterGenerator() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-r from-blue-100/50 to-indigo-100/50 text-black">
+      <div className="min-h-screen bg-gray-50 text-black">
         <div className="container mx-auto px-0 md:px-4 py-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-3">

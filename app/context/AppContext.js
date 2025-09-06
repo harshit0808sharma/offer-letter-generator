@@ -11,6 +11,7 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [category, setCategory] = useState("Full-Time");
+  const [activeField, setActiveField] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [formData, setFormData] = useState({
     candidateName: "",
@@ -41,6 +42,20 @@ export const AppProvider = ({ children }) => {
   const [cookieExists, setCookieExists] = useState("notExists");
   const router = useRouter();
   const previewRef = useRef();
+
+  const fieldRefs = useRef({});
+
+  useEffect(() => {
+    if (activeField && fieldRefs.current[activeField]) {
+      fieldRefs.current[activeField].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [activeField]);
+
+
+
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("pendingLetters") || "[]");
@@ -77,6 +92,7 @@ export const AppProvider = ({ children }) => {
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    setActiveField(field);
   };
 
   const savePendingLetter = () => {
@@ -135,7 +151,7 @@ export const AppProvider = ({ children }) => {
 
       const watermarkSrc = "/images/logo.png";
       const wmScale = 0.6;
-      const wmRotationDeg = -45;
+      // const wmRotationDeg = -45;
       const wmAlpha = 0.12;
 
       const loadImage = (src) =>
@@ -146,7 +162,7 @@ export const AppProvider = ({ children }) => {
           img.onerror = () => reject(new Error("Image load error"));
           img.src = src;
         });
-        
+
 
       let watermarkImgEl;
       try {
@@ -204,11 +220,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-
-
-
-
-
   const saveToRecentLetters = () => {
     const newLetter = {
       candidateName: formData.candidateName,
@@ -234,6 +245,8 @@ export const AppProvider = ({ children }) => {
     router.push("/login");
   };
 
+  console.log(activeField)
+
   return (
     <AppContext.Provider
       value={{
@@ -253,6 +266,9 @@ export const AppProvider = ({ children }) => {
         cookieExists,
         setCookieExists,
         handleLogout,
+        activeField,
+        setActiveField,
+        fieldRefs
       }}
     >
       {children}

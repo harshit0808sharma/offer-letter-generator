@@ -64,13 +64,14 @@ const Hero = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button
-                onClick={() => setOpen(true)}
+              <Link
+                href="/generator"
+                // onClick={() => setOpen(true)}
                 className="flex items-center gap-4 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-600 hover:to-indigo-600 transition-all transform hover:scale-105 shadow-lg"
               >
                 <span>Generate Offer Letter</span>
                 <FaArrowRight style={{ transform: 'rotateY(45deg)' }} />
-              </button>
+              </Link>
 
               <Link
                 href="https://the-salon-company.vercel.app/"
@@ -148,9 +149,9 @@ const Hero = () => {
               {/* Feature List Below Card */}
               <div className="mt-8 space-y-3">
                 {[
-                  "✨ Multiple professional templates",
+                  "✨ Highly Customizable",
                   "⚡ Instant PDF generation", 
-                  "🎨 Custom company branding",
+                  "🎨 Our company branding",
                   "📱 Mobile-friendly interface"
                 ].map((feature, index) => (
                   <motion.div
