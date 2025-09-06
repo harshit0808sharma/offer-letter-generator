@@ -7,29 +7,9 @@ import { FaFilePdf } from 'react-icons/fa';
 import { categoryTemplates } from '@/app/assets/data';
 
 const LetterPreview = ({ previewRef }) => {
-  const { formData, activeField, fieldRefs } = useContext(AppContext);
+  const { formData, fieldRefs } = useContext(AppContext);
   const containerRef = useRef(null);
 
-
-  useEffect(() => {
-    if (!activeField) return;
-    const fieldEl = fieldRefs[activeField]?.current;
-    const containerEl = containerRef.current;
-
-    if (fieldEl && containerEl) {
-      const fieldTop = fieldEl.offsetTop;
-      const fieldBottom = fieldTop + fieldEl.offsetHeight;
-      const containerTop = containerEl.scrollTop;
-      const containerBottom = containerTop + containerEl.clientHeight;
-
-      // Scroll only if the field is out of view
-      if (fieldTop < containerTop) {
-        containerEl.scrollTop = fieldTop - 20; // add small padding
-      } else if (fieldBottom > containerBottom) {
-        containerEl.scrollTop = fieldBottom - containerEl.clientHeight + 20;
-      }
-    }
-  }, [formData, activeField]);
 
 
   const roleDescription = categoryTemplates[formData.jobTitle] || categoryTemplates.Default;
