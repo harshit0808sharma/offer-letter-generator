@@ -1,5 +1,5 @@
 'use client'
-import { FaUserPlus, FaEdit, FaDownload } from "react-icons/fa";
+import { FaUserPlus, FaDownload, FaSave } from "react-icons/fa";
 
 const steps = [
   {
@@ -8,9 +8,9 @@ const steps = [
     desc: "Enter essential information like name, role, and location to get started.",
   },
   {
-    icon: <FaEdit className="w-8 h-8 text-indigo-600" />,
-    title: "Customize Template",
-    desc: "Choose from professional templates and edit them to match your style.",
+    icon: <FaSave className="w-8 h-8 text-indigo-600" />,
+    title: "Save Offer Letters",
+    desc: "Keep your offer letters pending by click on saving",
   },
   {
     icon: <FaDownload className="w-8 h-8 text-indigo-600" />,

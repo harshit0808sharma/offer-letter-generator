@@ -12,7 +12,6 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   const [category, setCategory] = useState("Full-Time");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [pages, setPages] = useState([]);
   const [formData, setFormData] = useState({
     candidateName: "",
     jobTitle: "",
@@ -109,19 +108,63 @@ const generatePDF = async () => {
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 20;
 
+    const watermarkSrc = "/images/LokaciWatermark.png"; 
+    const wmScale = 0.6; 
+    const wmRotationDeg = -45;
+    const wmAlpha = 0.12;
+
+    const loadImage = (src) =>
+      new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error("Image load error"));
+        img.src = src;
+      });
+
+    let watermarkImgEl;
+    try {
+      watermarkImgEl = await loadImage(watermarkSrc);
+    } catch (err) {
+      const resp = await fetch(watermarkSrc);
+      const blob = await resp.blob();
+      const dataUrl = await new Promise((res) => {
+        const fr = new FileReader();
+        fr.onload = () => res(fr.result);
+        fr.readAsDataURL(blob);
+      });
+      watermarkImgEl = await loadImage(dataUrl);
+    }
+
     for (let i = 0; i < pages.length; i++) {
       const canvas = await html2canvas(pages[i], { scale: 2, scrollY: -window.scrollY });
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
 
+      const finalCanvas = document.createElement("canvas");
+      finalCanvas.width = canvas.width;
+      finalCanvas.height = canvas.height;
+      const ctx = finalCanvas.getContext("2d");
+
+      ctx.drawImage(canvas, 0, 0);
+
+      const wmWidthPx = finalCanvas.width * wmScale;
+      const aspect = watermarkImgEl.height / watermarkImgEl.width;
+      const wmHeightPx = wmWidthPx * aspect;
+
+      ctx.save();
+      ctx.globalAlpha = wmAlpha;
+      ctx.translate(finalCanvas.width / 2, finalCanvas.height / 2);
+      ctx.rotate((wmRotationDeg * Math.PI) / 180);
+      ctx.drawImage(watermarkImgEl, -wmWidthPx / 2, -wmHeightPx / 2, wmWidthPx, wmHeightPx);
+      ctx.restore();
+      ctx.globalAlpha = 1;
+
+      const imgData = finalCanvas.toDataURL("image/jpeg", 1.0);
       const imgWidth = pageWidth - margin * 2;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const imgHeight = (finalCanvas.height * imgWidth) / finalCanvas.width;
 
       if (i > 0) pdf.addPage();
       pdf.addImage(imgData, "JPEG", margin, margin, imgWidth, imgHeight);
 
-      // Optional: Add header/footer
-      pdf.setFontSize(12);
-      // pdf.text("The Salon Company - Offer Letter", pageWidth / 2, 30, { align: "center" });
       pdf.setFontSize(10);
       pdf.text(`Page ${i + 1}`, pageWidth / 2, pageHeight - 20, { align: "center" });
     }
@@ -134,6 +177,9 @@ const generatePDF = async () => {
     toast.error("Error generating PDF. Please try again.");
   }
 };
+
+
+
 
 
 

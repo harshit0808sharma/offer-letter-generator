@@ -9,7 +9,6 @@ const CTASection = () => {
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
 
       <div className="relative max-w-4xl mx-auto text-center px-6">
-        {/* Glass effect card */}
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-10 shadow-2xl border border-white/20 hover:scale-105 transform transition duration-500">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
             Ready to Get Started?

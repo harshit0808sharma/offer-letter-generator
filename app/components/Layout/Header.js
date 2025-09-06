@@ -57,9 +57,8 @@ const Header = () => {
                 <Link
                   key={link.path}
                   href={link.path}
-                  className={`relative text-gray-700 hover:text-blue-600 transition font-medium ${
-                    isActive ? "text-blue-600" : ""
-                  }`}
+                  className={`relative text-gray-700 hover:text-blue-600 transition font-medium ${isActive ? "text-blue-600" : ""
+                    }`}
                 >
                   {link.name}
                   {isActive && (
@@ -103,7 +102,8 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="fixed top-0 left-0 w-full h-full bg-white/90 backdrop-blur-lg z-50 p-6 transition-transform duration-300 ease-in-out transform animate-slideIn">
+        <div className="fixed top-0 left-0 w-full h-full z-50 p-6 transition-transform duration-300 ease-in-out transform animate-slideIn"
+          style={{ backgroundColor: "white" }}>
           <button
             onClick={toggleMenu}
             className="absolute top-5 right-5 text-gray-700 hover:text-red-500"
@@ -118,9 +118,8 @@ const Header = () => {
                   key={link.path}
                   href={link.path}
                   onClick={toggleMenu}
-                  className={`${
-                    isActive ? "text-blue-600 font-semibold" : "text-gray-700"
-                  } hover:text-blue-600 transition`}
+                  className={`${isActive ? "text-blue-600 font-semibold" : "text-gray-700"
+                    } hover:text-blue-600 transition`}
                 >
                   {link.name}
                 </Link>
@@ -146,6 +145,8 @@ const Header = () => {
           </nav>
         </div>
       )}
+
+
     </nav>
   );
 };

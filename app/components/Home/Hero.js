@@ -1,23 +1,21 @@
 'use client';
 
-import { AppContext } from "@/app/context/AppContext";
 import Link from "next/link";
 import { useContext, useState, useEffect } from "react";
-import { FaArrowRight, FaFileAlt, FaUserTie, FaDownload, FaPalette } from "react-icons/fa";
+import { FaArrowRight, FaUserTie, FaDownload, FaPalette, FaSave } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Hero = () => {
-  const [open, setOpen] = useState(false);
-  const { setCategory } = useContext(AppContext);
+  // const [open, setOpen] = useState(false);
+  // const { setCategory } = useContext(AppContext);
 
-  // Card flip animation loop
   const [flipIndex, setFlipIndex] = useState(0);
   const cardData = [
     { 
-      title: "Professional Templates", 
-      description: "Choose from beautifully designed, industry-standard offer letter templates",
+      title: "Easily Save", 
+      description: "We can easily save the Candidate Profile after clicking on Save Button",
       color: "from-blue-400 to-indigo-500",
-      icon: <FaFileAlt className="text-3xl text-white mb-3" />
+      icon: <FaSave className="text-3xl text-white mb-3" />
     },
     { 
       title: "Candidate Details", 
@@ -32,7 +30,7 @@ const Hero = () => {
       icon: <FaDownload className="text-3xl text-white mb-3" />
     },
     { 
-      title: "Custom Branding", 
+      title: "Our Branding", 
       description: "Add your company logo and customize colors to match your brand identity",
       color: "from-orange-400 to-red-500",
       icon: <FaPalette className="text-3xl text-white mb-3" />
@@ -42,7 +40,7 @@ const Hero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setFlipIndex((prev) => (prev + 1) % cardData.length);
-    }, 3000); // Change every 3 seconds
+    }, 4000); 
     return () => clearInterval(interval);
   }, [cardData.length]);
 

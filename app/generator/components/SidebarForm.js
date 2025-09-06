@@ -19,7 +19,7 @@ const SidebarForm = () => {
     useContext(AppContext);
 
   return (
-    <div className="order-2 lg:order-1">
+    <div className="order-1 p-4">
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
           <FaUser className="text-blue-500" />

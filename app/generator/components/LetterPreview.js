@@ -32,7 +32,7 @@ const LetterPreview = ({ previewRef }) => {
       : 'Full-time';
 
   return (
-    <div className="col-span-2 order-1">
+    <div className="col-span-2 order-2">
       <div className="md:rounded-xl overflow-hidden border" style={{ backgroundColor: '#FFFFFF', borderColor: '#60A5FA' }}>
         {/* Header */}
         <div
@@ -61,11 +61,11 @@ const LetterPreview = ({ previewRef }) => {
                 position: "relative"
               }}
             >
-              <div
+              {/* <div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
                 style={{
-                  opacity: 0.2,
-                  transform: 'rotate(45deg)', 
+                  opacity: 0.1,
+                  transform: 'rotate(-45deg)', 
                 }}
               >
                 <Image
@@ -75,7 +75,7 @@ const LetterPreview = ({ previewRef }) => {
                   width={600}  
                   height={600} 
                 />
-              </div>
+              </div> */}
               {/* Page 1 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
@@ -161,11 +161,11 @@ const LetterPreview = ({ previewRef }) => {
                 position: "relative"
               }}
             >
-              <div
+              {/* <div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
                 style={{
-                  opacity: 0.2,
-                  transform: 'rotate(45deg)', 
+                  opacity: 0.1,
+                  transform: 'rotate(-45deg)', 
                 }}
               >
                 <Image
@@ -175,7 +175,7 @@ const LetterPreview = ({ previewRef }) => {
                   width={600}  
                   height={600} 
                 />
-              </div>
+              </div> */}
               {/* Page 2 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
@@ -269,11 +269,11 @@ const LetterPreview = ({ previewRef }) => {
                 position: "relative"
               }}
             >
-              <div
+              {/* <div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
                 style={{
-                  opacity: 0.2,
-                  transform: 'rotate(45deg)', 
+                  opacity: 0.1,
+                  transform: 'rotate(-45deg)', 
                 }}
               >
                 <Image
@@ -283,7 +283,7 @@ const LetterPreview = ({ previewRef }) => {
                   width={600}  
                   height={600} 
                 />
-              </div>
+              </div> */}
               {/* Page 3 Header */}
               <div className="text-center pt-8 pb-6 px-8 border-b" style={{ borderColor: '#D1D5DB' }}>
                 <div className="w-16 h-16 mx-auto mb-4">
