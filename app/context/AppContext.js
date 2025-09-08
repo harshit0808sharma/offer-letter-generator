@@ -54,9 +54,6 @@ export const AppProvider = ({ children }) => {
     }
   }, [activeField]);
 
-
-
-
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("pendingLetters") || "[]");
     setPendingLetters(saved);
@@ -72,14 +69,19 @@ export const AppProvider = ({ children }) => {
       const { value, expiresAt } = JSON.parse(stored);
       if (Date.now() < expiresAt) {
         setCookieExists(value);
-        if (value === "exists") setIsAuthenticated(true);
+        if (value === "exists") {
+          setIsAuthenticated(true);
+          Cookies.set("authToken", "true", { expires: 1 });
+        }
       } else {
         localStorage.removeItem("cookieExists");
         setCookieExists("notExists");
         setIsAuthenticated(false);
+        Cookies.remove("authToken");
       }
     }
   }, []);
+
 
   useEffect(() => {
     if (cookieExists === "exists") {
@@ -238,14 +240,16 @@ export const AppProvider = ({ children }) => {
     setFormData({ candidateName: "", jobTitle: "", joiningDate: "", location: "", salary: "", hrManagerName: "" });
   };
 
-  const handleLogout = () => {
-    Cookies.remove("authToken", { path: "/" });
-    setIsAuthenticated(false);
-    setCookieExists("notExists");
-    router.push("/login");
-  };
+const handleLogout = () => {
+  Cookies.remove("authToken", { path: "/" }); 
+  localStorage.removeItem("cookieExists");    
+  setIsAuthenticated(false);                  
+  setCookieExists("notExists");               
+  router.push("/login");                      
+};
 
-  console.log(activeField)
+
+  // console.log(activeField)
 
   return (
     <AppContext.Provider

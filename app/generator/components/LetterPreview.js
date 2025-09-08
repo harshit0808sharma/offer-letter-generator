@@ -2,7 +2,7 @@
 
 import { AppContext } from '@/app/context/AppContext';
 import Image from 'next/image';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
 import { categoryTemplates } from '@/app/assets/data';
 

@@ -6,6 +6,8 @@ import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { AppContext } from "@/app/context/AppContext";
+import ToggleSwitch from "../Home/ToggleSwitch";
+import { FiLogOut } from "react-icons/fi";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +33,7 @@ const Header = () => {
     } else {
       document.body.style.overflow = 'unset';
     }
-    
+
     // Cleanup on unmount
     return () => {
       document.body.style.overflow = 'unset';
@@ -59,26 +61,24 @@ const Header = () => {
   ];
 
   const isUserLoggedIn = cookieExists === "exists" || isAuthenticated;
+  // console.log(isUserLoggedIn);
 
   return (
     <>
-      <nav className="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+      <nav className="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-40 shadow-sm py-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex items-center space-x-2 group"
               aria-label="Offer Letter Platform Home"
             >
               <div className="w-9 h-9 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow duration-200">
                 <FaFileAlt className="text-white text-sm" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-gray-700 to-black bg-clip-text text-transparent hidden sm:block">
-                Offer Letter Platform
-              </span>
-              <span className="text-xl font-bold bg-gradient-to-r from-gray-700 to-black bg-clip-text text-transparent sm:hidden">
-                OLP
+              <span className="text-2xl font-bold text-black">
+                LOKACI
               </span>
             </Link>
 
@@ -90,9 +90,8 @@ const Header = () => {
                   <Link
                     key={link.path}
                     href={link.path}
-                    className={`relative text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium py-2 ${
-                      isActive ? "text-blue-600" : ""
-                    }`}
+                    className={`relative text-gray-600 hover:text-blue-600 transition-colors text-lg duration-200 font-semibold py-2 ${isActive ? "text-blue-600" : ""
+                      }`}
                   >
                     {link.name}
                     {isActive && (
@@ -104,10 +103,10 @@ const Header = () => {
             </div>
 
             {/* Desktop Buttons */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3 w-72 h-12 px-2">
               <Link
                 href="/generator"
-                className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-5 py-2 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 font-medium"
+                className="flex-1 flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-sm shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 font-medium h-full"
               >
                 Dashboard
               </Link>
@@ -115,12 +114,22 @@ const Header = () => {
               {isUserLoggedIn && (
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg hover:bg-red-600 transition-all duration-200 font-medium"
+                  className="group relative flex items-center justify-start w-12 h-12 rounded-full bg-red-500 text-white shadow-md overflow-hidden transition-all duration-300 hover:w-32 hover:rounded-2xl active:translate-x-[2px] active:translate-y-[2px]"
                 >
-                  Logout
+                  {/* Icon */}
+                  <div className="flex items-center justify-center w-full transition-all duration-300 ease-in-out group-hover:w-1/3 pl-0 group-hover:pl-4 h-full">
+                    <FiLogOut size={18} />
+                  </div>
+
+                  {/* Text */}
+                  <span className="absolute right-0 w-0 opacity-0 text-sm font-semibold transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:w-2/3 group-hover:pr-3 flex items-center h-full">
+                    Logout
+                  </span>
                 </button>
               )}
             </div>
+
+
 
             {/* Mobile Menu Toggle */}
             <div className="lg:hidden">
@@ -139,19 +148,19 @@ const Header = () => {
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 lg:hidden"
           role="dialog"
           aria-modal="true"
           aria-label="Mobile navigation menu"
         >
           {/* Backdrop */}
-          <div 
+          <div
             className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
             onClick={toggleMenu}
             aria-hidden="true"
           ></div>
-          
+
           {/* Menu Panel */}
           <div className="fixed top-0 right-0 w-full max-w-sm h-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
             <div className="flex flex-col h-full">
@@ -182,11 +191,10 @@ const Header = () => {
                         <Link
                           href={link.path}
                           onClick={toggleMenu}
-                          className={`block px-4 py-3 rounded-lg text-lg transition-colors duration-200 ${
-                            isActive 
-                              ? "text-blue-600 bg-blue-50 font-semibold border-l-4 border-blue-600" 
-                              : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                          }`}
+                          className={`block px-4 py-3 rounded-lg text-lg transition-colors duration-200 ${isActive
+                            ? "text-blue-600 bg-blue-50 font-semibold border-l-4 border-blue-600"
+                            : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                            }`}
                         >
                           {link.name}
                         </Link>
@@ -211,12 +219,21 @@ const Header = () => {
                         toggleMenu();
                         handleLogout();
                       }}
-                      className="w-full bg-red-500 text-white py-3 rounded-lg font-medium shadow-md hover:shadow-lg hover:bg-red-600 transition-all duration-200"
+                      className="group relative flex items-center justify-start w-full py-1 px-4 rounded-lg bg-red-500 text-white font-medium shadow-md overflow-hidden transition-all duration-300 hover:bg-red-600 hover:shadow-lg"
                     >
-                      Logout
+                      {/* Icon */}
+                      <div className="flex items-center justify-center w-10 h-10 bg-red-600 rounded-full transition-all duration-300 ease-in-out group-hover:w-12 group-hover:mr-2">
+                        <FiLogOut size={18} />
+                      </div>
+
+                      {/* Text */}
+                      <span className="ml-3 opacity-100 text-sm font-semibold transition-all duration-300">
+                        Logout
+                      </span>
                     </button>
                   )}
                 </div>
+
               </nav>
             </div>
           </div>

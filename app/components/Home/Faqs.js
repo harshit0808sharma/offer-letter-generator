@@ -62,12 +62,12 @@ const FaqSection = () => {
         >
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <motion.h2
-                        className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight"
-                        variants={itemVariants}
-                    >
-                        Frequently Asked Questions
-                    </motion.h2>
+                    <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+                        Frequently Asked{" "}
+                        <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                            Questions
+                        </span>
+                    </h2>
                     <motion.p
                         className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto"
                         variants={itemVariants}

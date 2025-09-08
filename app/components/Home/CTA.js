@@ -1,60 +1,37 @@
-'use client'
+"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
 
 const CTASection = () => {
   const containerVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" } }
-  };
-
-  const blobVariants = {
-    animate: {
-      scale: [1, 1.1, 1],
-      rotate: [0, 10, -10, 0],
-      transition: {
-        duration: 8,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
   return (
-    <section className="relative py-28 bg-gradient-to-br from-blue-700 to-purple-800 text-white overflow-hidden">
-      {/* Animated blob shapes */}
-      <motion.div
-        className="absolute -top-20 -left-20 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"
-        variants={blobVariants}
-        animate="animate"
-      ></motion.div>
-      <motion.div
-        className="absolute bottom-10 -right-20 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
-        variants={blobVariants}
-        animate="animate"
-      ></motion.div>
-
-      <div className="relative max-w-4xl mx-auto text-center px-6">
+    <section className="relative py-24 bg-gray-50">
+      <div className="relative max-w-5xl mx-auto text-center px-6">
         <motion.div
-          className="bg-white/10 backdrop-blur-xl rounded-3xl p-10 md:p-14 shadow-2xl border border-white/20"
+          className="bg-white rounded-2xl p-10 md:p-14 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight tracking-tight">
-            Ready to Revolutionize Your Hiring?
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+            Ready to Transform Your Hiring Process?
           </h2>
-          <p className="text-lg md:text-xl text-white/80 mb-10 max-w-3xl mx-auto">
-            Create your first customized offer letter in moments. Our platform is designed for speed and precision.
+          <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            Generate professional, branded offer letters in seconds.  
+            Simple. Fast. Reliable.
           </p>
 
           <Link
             href="/generator"
-            className="inline-block bg-white text-purple-700 px-10 py-4 rounded-full text-lg font-bold shadow-xl hover:bg-white hover:shadow-2xl hover:scale-105 transition-all duration-300"
+            className="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 rounded-xl text-lg font-medium shadow hover:bg-gray-800 transition-all duration-300"
           >
-            Get Started Now
+            Get Started Now →
           </Link>
         </motion.div>
       </div>
