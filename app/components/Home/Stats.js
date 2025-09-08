@@ -56,7 +56,7 @@ const MissionSection = () => {
                             className="text-gray-400 leading-relaxed"
                             variants={itemVariants}
                         >
-                            Whether you're hiring full-time employees, interns, or contractors, our tool adapts to your needs. Save time, avoid manual errors, and impress your new hires with beautifully designed offer letters.
+                            Whether you are hiring full-time employees, interns, or contractors, our tool adapts to your needs. Save time, avoid manual errors, and impress your new hires with beautifully designed offer letters.
                         </motion.p>
                     </div>
 
