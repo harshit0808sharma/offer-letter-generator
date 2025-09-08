@@ -49,7 +49,7 @@ export default function NotFoundPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.6 }}
                 >
-                    Oops! The page you're looking for doesn't exist.
+                    Oops! The page you are looking for does not exist.
                 </motion.p>
 
                 <motion.div
@@ -66,7 +66,6 @@ export default function NotFoundPage() {
                 </motion.div>
             </motion.div>
 
-            {/* Tailwind Keyframes for Animations (place this in your CSS file or a style tag) */}
             <style jsx global>{`
                 @keyframes spin-slow {
                     from { transform: rotate(0deg); }
