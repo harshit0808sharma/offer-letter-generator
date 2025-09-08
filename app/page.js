@@ -1,4 +1,5 @@
 import CTASection from "./components/Home/CTA";
+import FaqSection from "./components/Home/Faqs";
 import FeatureSection from "./components/Home/Features";
 import Hero from "./components/Home/Hero";
 import HowItWorks from "./components/Home/HowItWorks";
@@ -13,6 +14,7 @@ export default function Home() {
       <Hero/>
       <HowItWorks/>
       <FeatureSection/>
+      <FaqSection/>
       <StatsSection/>
       <CTASection/>
       <Footer/>
