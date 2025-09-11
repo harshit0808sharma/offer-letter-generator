@@ -81,7 +81,7 @@ const Hero = () => {
               className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight"
             >
               Professional{" "}
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-indigo-600 bg-clip-text text-transparent">
                 Offer Letters
               </span>{" "}Made Simple
             </motion.h1>
@@ -99,7 +99,7 @@ const Hero = () => {
               className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start"
             >
               <Link href="/generator">
-                <motion.div whileHover={{ scale: 1.05 }} className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white px-8 py-4 rounded-sm text-lg font-semibold shadow-2xl shadow-blue-500/25">
+                <motion.div whileHover={{ scale: 1.05 }} className="inline-flex items-center gap-4 bg-indigo-600 text-white px-8 py-4 rounded-sm text-lg font-semibold shadow-2xl shadow-blue-500/25">
                   Start Creating Now <FaArrowRight />
                 </motion.div>
               </Link>

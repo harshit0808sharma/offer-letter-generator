@@ -14,7 +14,8 @@ export default function LoginPage() {
     const router = useRouter();
     const { setIsAuthenticated, setCookieExists } = useContext(AppContext);
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+    e.preventDefault();
         setLoading(true);
 
         try {
@@ -70,7 +71,7 @@ export default function LoginPage() {
                         </div>
                         <h1 className="text-2xl font-bold text-gray-900 mb-2">Log in to your Account</h1>
                         <p className="text-gray-500 mb-8">Note: Login with you authorized credentials!</p>
-                        <div className="space-y-4">
+                        <form onSubmit={handleLogin} className="space-y-4">
                             <div className="relative">
                                 <HiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
@@ -95,7 +96,7 @@ export default function LoginPage() {
 
 
                             <button
-                                onClick={handleLogin}
+                                type="submit"
                                 disabled={loading}
                                 className={`w-full py-3 rounded-lg text-white font-semibold transition ${loading
                                     ? "bg-blue-300 cursor-not-allowed"
@@ -104,7 +105,7 @@ export default function LoginPage() {
                             >
                                 {loading ? "Logging in..." : "Login"}
                             </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
 
@@ -154,12 +155,6 @@ export default function LoginPage() {
                         <p className="text-blue-100 text-lg mb-8 max-w-md mx-auto">
                             Please Authenticate Yourself
                         </p>
-
-                        {/* <div className="flex justify-center space-x-2">
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                            <div className="w-2 h-2 bg-white/50 rounded-full"></div>
-                            <div className="w-2 h-2 bg-white/50 rounded-full"></div>
-                        </div> */}
                     </div>
                 </div>
             </div>

@@ -269,14 +269,19 @@ const SidebarForm = () => {
                     {formData.documentsRequired?.map((doc, index) => (
                       <div key={index} className="flex items-center gap-2">
                         <input
+                          ref={(el) => {
+                            if (!fieldRefs.current.documentsRequired) {
+                              fieldRefs.current.documentsRequired = [];
+                            }
+                            fieldRefs.current.documentsRequired[index] = el;
+                          }}
                           type="text"
-                          onFocus={() => setActiveField("documentsRequired")}
-
+                          onFocus={() => setActiveField(`documentsRequired-${index}`)}
                           value={doc}
                           onChange={(e) => {
                             const newDocs = [...formData.documentsRequired];
                             newDocs[index] = e.target.value;
-                            setFormData(prev => ({ ...prev, documentsRequired: newDocs }));
+                            setFormData((prev) => ({ ...prev, documentsRequired: newDocs }));
                           }}
                           placeholder={`Document ${index + 1}`}
                           className="form-input w-full"
@@ -285,7 +290,7 @@ const SidebarForm = () => {
                           type="button"
                           onClick={() => {
                             const newDocs = formData.documentsRequired.filter((_, i) => i !== index);
-                            setFormData(prev => ({ ...prev, documentsRequired: newDocs }));
+                            setFormData((prev) => ({ ...prev, documentsRequired: newDocs }));
                           }}
                           className="p-1 bg-red-500 text-white rounded hover:bg-red-600"
                         >
@@ -297,7 +302,7 @@ const SidebarForm = () => {
                     <button
                       type="button"
                       onClick={() =>
-                        setFormData(prev => ({
+                        setFormData((prev) => ({
                           ...prev,
                           documentsRequired: [...prev.documentsRequired, ""],
                         }))
@@ -307,6 +312,7 @@ const SidebarForm = () => {
                       Add Document
                     </button>
                   </div>
+
                 </div>
 
                 <button

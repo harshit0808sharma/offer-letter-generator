@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
     FaFilePdf,
     FaCalendarAlt,
@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
+import { AppContext } from "../context/AppContext";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -39,25 +40,7 @@ const itemVariants = {
 };
 
 const RecentLetters = () => {
-    const [recentLetters, setRecentLetters] = useState([]);
-
-    useEffect(() => {
-        const stored = localStorage.getItem("recentLetters");
-        if (stored) {
-            setRecentLetters(JSON.parse(stored));
-        }
-    }, []);
-
-    const clearAllLetters = () => {
-        if (recentLetters.length === 0) {
-            toast.info("No letters to clear");
-            return;
-        }
-
-        localStorage.removeItem("recentLetters");
-        setRecentLetters([]);
-        toast.success("All recent letters have been cleared");
-    };
+    const { recentLetters, deleteAllRecentLetters } = useContext(AppContext);
 
     return (
         <>
@@ -76,7 +59,7 @@ const RecentLetters = () => {
                             </p>
                         </div>
                         <motion.button
-                            onClick={clearAllLetters}
+                            onClick={deleteAllRecentLetters}
                             className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full text-sm sm:text-base font-medium shadow-md transition-all duration-300 transform hover:scale-105"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}

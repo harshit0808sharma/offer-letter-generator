@@ -13,8 +13,15 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, setIsAuthenticated, setCookieExists, cookieExists } =
-    useContext(AppContext);
+  
+  // Get the proper logout function from context
+  const { 
+    isAuthenticated, 
+    setIsAuthenticated, 
+    setCookieExists, 
+    cookieExists,
+    handleLogout: contextLogout  // ✅ Use the context's logout function
+  } = useContext(AppContext);
 
   useEffect(() => {
     const token = Cookies.get("authToken");
@@ -40,15 +47,22 @@ const Header = () => {
     };
   }, [isOpen]);
 
+  // ✅ FIXED: Use the context's logout function instead of creating our own
   const handleLogout = async () => {
     try {
+      // Optional: Call your API logout endpoint if needed
       await fetch("/api/logout", { method: "POST" });
-      setIsAuthenticated(false);
-      setCookieExists("notExists");
+      
+      // Use the context's logout function which properly clears localStorage
+      contextLogout();
+      
       toast.success("Logged out successfully");
-      router.push("/login");
     } catch (error) {
-      toast.error("Logout failed. Please try again.");
+      console.error("API logout failed:", error);
+      
+      // Even if API fails, still logout locally
+      contextLogout();
+      toast.success("Logged out successfully");
     }
   };
 
@@ -61,7 +75,6 @@ const Header = () => {
   ];
 
   const isUserLoggedIn = cookieExists === "exists" || isAuthenticated;
-  // console.log(isUserLoggedIn);
 
   return (
     <>
@@ -90,7 +103,7 @@ const Header = () => {
                   <Link
                     key={link.path}
                     href={link.path}
-                    className={`relative text-gray-600 hover:text-blue-600 transition-colors text-lg duration-200 font-semibold py-2 ${isActive ? "text-blue-600" : ""
+                    className={`relative text-gray-500 hover:text-gray-600 transition-colors text-lg duration-200 font-semibold py-2 ${isActive ? "text-blue-600" : ""
                       }`}
                   >
                     {link.name}
@@ -128,8 +141,6 @@ const Header = () => {
                 </button>
               )}
             </div>
-
-
 
             {/* Mobile Menu Toggle */}
             <div className="lg:hidden">

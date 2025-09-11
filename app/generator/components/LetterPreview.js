@@ -5,9 +5,10 @@ import Image from 'next/image';
 import { useContext, useRef } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
 import { categoryTemplates } from '@/app/assets/data';
+import ContentEditable from 'react-contenteditable';
 
 const LetterPreview = ({ previewRef }) => {
-  const { formData, fieldRefs } = useContext(AppContext);
+  const { formData, fieldRefs, handleInputChange } = useContext(AppContext);
   const containerRef = useRef(null);
 
 
@@ -72,13 +73,30 @@ const LetterPreview = ({ previewRef }) => {
                     className="rounded-full"
                   />
                 </div>
-                <h1 ref={(el) => (fieldRefs.current.companyName = el)} className="text-xl font-bold mb-2" style={{ color: '#111827' }}>
-                  {formData.companyName || '[Company Name]'}
-                </h1>
+                <ContentEditable
+                  innerRef={(el) => (fieldRefs.current.companyName = el)}
+                  html={formData.companyName || "[Company Name]"} // keeps content in sync with state
+                  onChange={(e) => handleInputChange("companyName", e.target.value)}
+                  tagName="h1"
+                  className="text-xl font-bold mb-2"
+                  style={{ color: "#111827", direction: "ltr" }}
+                />
+
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
-                <p ref={(el) => (fieldRefs.current.companyAddress = el)} className="text-xs" style={{ color: '#6B7280' }}>
-                  {formData.companyAddress || '[Company Address]'} | Phone: {formData.companyPhone || '[Company Phone]'}
-                </p>
+                <ContentEditable
+                  innerRef={(el) => (fieldRefs.current.companyAddress = el)}
+                  html={`${formData.companyAddress || '[Company Address]'} | Phone: ${formData.companyPhone || '[Company Phone]'}`}
+                  onChange={(e) => {
+                    // Split the content back into address and phone
+                    const [address, phonePart] = e.target.value.split(" | Phone: ");
+                    handleInputChange("companyAddress", address || "");
+                    handleInputChange("companyPhone", phonePart || "");
+                  }}
+                  tagName="p"
+                  className="text-xs"
+                  style={{ color: "#6B7280", direction: "ltr" }}
+                />
+
               </div>
 
               {/* Page 1 Content */}
@@ -88,11 +106,30 @@ const LetterPreview = ({ previewRef }) => {
                 </div>
 
                 <div className="space-y-6 text-sm leading-7" style={{ color: '#1F2937' }}>
-                  <p ref={(el) => (fieldRefs.current.candidateName = el)} className="font-semibold text-base">{formData.candidateName || '[Candidate Name]'}</p>
+                  <ContentEditable
+                    innerRef={(el) => (fieldRefs.current.candidateName = el)}
+                    html={formData.candidateName || '[Candidate Name]'}
+                    onChange={(e) => handleInputChange('candidateName', e.target.value)}
+                    tagName="p"
+                    className="font-semibold text-base"
+                    style={{ direction: 'ltr' }}
+                  />
 
                   <p className="font-semibold text-lg">Subject: Offer of Employment</p>
 
-                  <p>Dear {formData.candidateName || '[Candidate Name]'},</p>
+                  <p>
+                    Dear{' '}
+                    <ContentEditable
+                      innerRef={(el) => (fieldRefs.current.candidateName = el)}
+                      html={formData.candidateName || '[Candidate Name]'}
+                      onChange={(e) => handleInputChange('candidateName', e.target.value)}
+                      tagName="span"
+                      className="font-semibold"
+                      style={{ direction: 'ltr' }}
+                    />
+                    ,
+                  </p>
+
 
                   <p >{roleDescription}</p>
 
@@ -104,19 +141,67 @@ const LetterPreview = ({ previewRef }) => {
 
                   <div>
                     <p className="font-semibold mb-4">Position Details:</p>
-                    <div className="p-4 rounded border space-y-2" style={{ backgroundColor: '#F9FAFB', borderColor: '#E5E7EB' }}>
-                      <p ref={(el) => (fieldRefs.current.jobTitle = el)}><strong>Job Title:</strong> {formData.jobTitle || '[Job Title]'}</p>
-                      <p ref={(el) => (fieldRefs.current.joiningDate = el)}><strong>Start Date:</strong> {formatDate(formData.joiningDate)}</p>
-                      <p ref={(el) => (fieldRefs.current.location = el)}>
-                        <strong>Work Location:</strong> {formData.location || '[Work Location]'}
+                    <div
+                      className="p-4 rounded border space-y-2"
+                      style={{ backgroundColor: '#F9FAFB', borderColor: '#E5E7EB' }}
+                    >
+                      <p>
+                        <strong>Job Title:</strong>{' '}
+                        <ContentEditable
+                          innerRef={(el) => (fieldRefs.current.jobTitle = el)}
+                          html={formData.jobTitle || '[Job Title]'}
+                          onChange={(e) => handleInputChange('jobTitle', e.target.value)}
+                          tagName="span"
+                          style={{ direction: 'ltr' }}
+                        />
                       </p>
-                      <p ref={(el) => (fieldRefs.current.salary = el)}><strong>Annual Salary:</strong> {formatSalary(formData.salary)} per year</p>
-                      <p ref={(el) => (fieldRefs.current.employmentType = el)}>
-                        <strong>Employment Type:</strong> {formData.employmentType || '[Employment Type]'}
+
+                      <p>
+                        <strong>Start Date:</strong>{' '}
+                        <ContentEditable
+                          innerRef={(el) => (fieldRefs.current.joiningDate = el)}
+                          html={formatDate(formData.joiningDate)}
+                          onChange={(e) => handleInputChange('joiningDate', e.target.value)}
+                          tagName="span"
+                          style={{ direction: 'ltr' }}
+                        />
+                      </p>
+
+                      <p>
+                        <strong>Work Location:</strong>{' '}
+                        <ContentEditable
+                          innerRef={(el) => (fieldRefs.current.location = el)}
+                          html={formData.location || '[Work Location]'}
+                          onChange={(e) => handleInputChange('location', e.target.value)}
+                          tagName="span"
+                          style={{ direction: 'ltr' }}
+                        />
+                      </p>
+
+                      <p>
+                        <strong>Annual Salary:</strong>{' '}
+                        <ContentEditable
+                          innerRef={(el) => (fieldRefs.current.salary = el)}
+                          html={formatSalary(formData.salary)}
+                          onChange={(e) => handleInputChange('salary', e.target.value)}
+                          tagName="span"
+                          style={{ direction: 'ltr' }}
+                        />{' '}
+                        per year
+                      </p>
+
+                      <p>
+                        <strong>Employment Type:</strong>{' '}
+                        <ContentEditable
+                          innerRef={(el) => (fieldRefs.current.employmentType = el)}
+                          html={formData.employmentType || '[Employment Type]'}
+                          onChange={(e) => handleInputChange('employmentType', e.target.value)}
+                          tagName="span"
+                          style={{ direction: 'ltr' }}
+                        />
                       </p>
                     </div>
                   </div>
-
                   <div>
                     <p className="font-semibold mb-3">What to Expect:</p>
                     <ul className="ml-6 space-y-1" style={{ listStyleType: 'disc' }}>
@@ -161,13 +246,31 @@ const LetterPreview = ({ previewRef }) => {
                     className="rounded-full"
                   />
                 </div>
-                <h1 className="text-xl font-bold mb-2" style={{ color: '#111827' }}>
-                  {formData.companyName || '[Company Name]'}
-                </h1>
+                import ContentEditable from "react-contenteditable";
+
+                <ContentEditable
+                  innerRef={(el) => (fieldRefs.current.companyName = el)}
+                  html={formData.companyName || '[Company Name]'}
+                  onChange={(e) => handleInputChange('companyName', e.target.value)}
+                  tagName="h1"
+                  className="text-xl font-bold mb-2"
+                  style={{ color: '#111827', direction: 'ltr' }}
+                />
+
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
-                <p className="text-xs" style={{ color: '#6B7280' }}>
-                  {formData.companyAddress || '[Company Address]'} | Phone: {formData.companyPhone || '[Company Phone]'}
-                </p>
+                <ContentEditable
+                  innerRef={(el) => (fieldRefs.current.companyAddress = el)}
+                  html={`${formData.companyAddress || '[Company Address]'} | Phone: ${formData.companyPhone || '[Company Phone]'}`}
+                  onChange={(e) => {
+                    // Split the content back into address and phone
+                    const [address, phonePart] = e.target.value.split(" | Phone: ");
+                    handleInputChange("companyAddress", address || "");
+                    handleInputChange("companyPhone", phonePart || "");
+                  }}
+                  tagName="p"
+                  className="text-xs"
+                  style={{ color: "#6B7280", direction: "ltr" }}
+                />
               </div>
 
               {/* Page 2 Content */}
@@ -254,13 +357,29 @@ const LetterPreview = ({ previewRef }) => {
                     className="rounded-full"
                   />
                 </div>
-                <h1 className="text-xl font-bold mb-2" style={{ color: '#111827' }}>
-                  {formData.companyName || '[Company Name]'}
-                </h1>
+                <ContentEditable
+                  innerRef={(el) => (fieldRefs.current.companyName = el)}
+                  html={formData.companyName || '[Company Name]'}
+                  onChange={(e) => handleInputChange('companyName', e.target.value)}
+                  tagName="h1"
+                  className="text-xl font-bold mb-2"
+                  style={{ color: '#111827', direction: 'ltr' }}
+                />
+
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
-                <p className="text-xs" style={{ color: '#6B7280' }}>
-                  {formData.companyAddress || '[Company Address]'} | Phone: {formData.companyPhone || '[Company Phone]'}
-                </p>
+                <ContentEditable
+                  innerRef={(el) => (fieldRefs.current.companyAddress = el)}
+                  html={`${formData.companyAddress || '[Company Address]'} | Phone: ${formData.companyPhone || '[Company Phone]'}`}
+                  onChange={(e) => {
+                    // Split the content back into address and phone
+                    const [address, phonePart] = e.target.value.split(" | Phone: ");
+                    handleInputChange("companyAddress", address || "");
+                    handleInputChange("companyPhone", phonePart || "");
+                  }}
+                  tagName="p"
+                  className="text-xs"
+                  style={{ color: "#6B7280", direction: "ltr" }}
+                />
               </div>
 
               {/* Page 3 Content */}
@@ -268,21 +387,42 @@ const LetterPreview = ({ previewRef }) => {
                 <div className="space-y-6 text-sm leading-7" style={{ color: '#1F2937' }}>
                   <p>
                     Please confirm your acceptance of this offer by signing and returning this letter by{' '}
-                    <strong ref={(el) => (fieldRefs.current.joiningDate = el)}>
-                      {formData.joiningDate
-                        ? new Date(new Date(formData.joiningDate).getTime() - 7 * 24 * 60 * 60 * 1000)
-                          .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-                        : '[One week before joining date]'}
-                    </strong>
+                    <ContentEditable
+                      innerRef={(el) => (fieldRefs.current.joiningDate = el)}
+                      html={
+                        formData.joiningDate
+                          ? new Date(new Date(formData.joiningDate).getTime() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                          : '[One week before joining date]'
+                      }
+                      onChange={(e) => handleInputChange('joiningDate', e.target.value)}
+                      tagName="strong"
+                      style={{ fontWeight: 600 }}
+                    />
                     . We look forward to welcoming you to our team and are excited about the contributions
                     you will make to our continued success.
                   </p>
 
-                  <div ref={(el) => (fieldRefs.current.documentsRequired = el)}>
+                  <div>
                     <p className="font-semibold mb-3">Required Documents (Please bring on first day):</p>
                     <ul className="ml-6 space-y-1" style={{ listStyleType: 'disc' }}>
                       {formData.documentsRequired?.map((doc, index) => (
-                        <li key={index}>{doc}</li>
+                        <ContentEditable
+                          key={index}
+                          innerRef={(el) => {
+                            if (!fieldRefs.current.documentsRequired) fieldRefs.current.documentsRequired = [];
+                            fieldRefs.current.documentsRequired[index] = el;
+                          }}
+                          html={doc}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setFormData((prev) => {
+                              const updated = [...prev.documentsRequired];
+                              updated[index] = value;
+                              return { ...prev, documentsRequired: updated };
+                            });
+                          }}
+                          tagName="li"
+                        />
                       ))}
                     </ul>
                   </div>
@@ -292,9 +432,28 @@ const LetterPreview = ({ previewRef }) => {
                     <p className="font-semibold mb-2">Contact Information:</p>
                     <p className="mb-2">For any questions regarding this offer, please contact:</p>
                     <div className="ml-4">
-                      <p ref={(el) => (fieldRefs.current.companyEmail = el)}><strong>Email:</strong> {formData.companyEmail || '[Company Email]'}</p>
-                      <p ref={(el) => (fieldRefs.current.companyPhone = el)}><strong>Phone:</strong> {formData.companyPhone || '[Company Phone]'}</p>
-                      <p ref={(el) => (fieldRefs.current.officeHours = el)}><strong>Office Hours:</strong> {formData.officeHours || '[Office Hours]'}</p>
+                      <ContentEditable
+                        innerRef={(el) => (fieldRefs.current.companyEmail = el)}
+                        html={formData.companyEmail || '[Company Email]'}
+                        onChange={(e) => handleInputChange('companyEmail', e.target.value)}
+                        tagName="p"
+                        className="mb-1"
+                      />
+
+                      <ContentEditable
+                        innerRef={(el) => (fieldRefs.current.companyPhone = el)}
+                        html={formData.companyPhone || '[Company Phone]'}
+                        onChange={(e) => handleInputChange('companyPhone', e.target.value)}
+                        tagName="p"
+                        className="mb-1"
+                      />
+
+                      <ContentEditable
+                        innerRef={(el) => (fieldRefs.current.officeHours = el)}
+                        html={formData.officeHours || '[Office Hours]'}
+                        onChange={(e) => handleInputChange('officeHours', e.target.value)}
+                        tagName="p"
+                      />
                     </div>
                   </div>
 
@@ -303,7 +462,13 @@ const LetterPreview = ({ previewRef }) => {
                     <p className="mb-6">Sincerely,</p>
                     <div className="mb-8">
                       <div className="mb-2 w-48" style={{ borderBottom: '1px solid #9CA3AF' }}></div>
-                      <p ref={(el) => (fieldRefs.current.hrManagerName = el)} className="font-semibold">{formData.hrManagerName || '[HR Manager Name]'}</p>
+                      <ContentEditable
+                        innerRef={(el) => (fieldRefs.current.hrManagerName = el)}
+                        html={formData.hrManagerName || '[HR Manager Name]'}
+                        onChange={(e) => handleInputChange('hrManagerName', e.target.value)}
+                        tagName="p"
+                        className="font-semibold"
+                      />
                       <p className="text-xs" style={{ color: '#6B7280' }}>Human Resources Manager</p>
                       <p className="text-xs" style={{ color: '#6B7280' }}>Lokaci Private Limited</p>
                     </div>
