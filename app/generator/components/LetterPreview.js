@@ -75,7 +75,7 @@ const LetterPreview = ({ previewRef }) => {
                 </div>
                 <ContentEditable
                   innerRef={(el) => (fieldRefs.current.companyName = el)}
-                  html={formData.companyName || "[Company Name]"} // keeps content in sync with state
+                  html={formData.companyName || "[Company Name]"} 
                   onChange={(e) => handleInputChange("companyName", e.target.value)}
                   tagName="h1"
                   className="text-xl font-bold mb-2"
@@ -246,8 +246,6 @@ const LetterPreview = ({ previewRef }) => {
                     className="rounded-full"
                   />
                 </div>
-                import ContentEditable from "react-contenteditable";
-
                 <ContentEditable
                   innerRef={(el) => (fieldRefs.current.companyName = el)}
                   html={formData.companyName || '[Company Name]'}
@@ -386,7 +384,7 @@ const LetterPreview = ({ previewRef }) => {
               <div className="flex-1 px-8 py-6">
                 <div className="space-y-6 text-sm leading-7" style={{ color: '#1F2937' }}>
                   <p>
-                    Please confirm your acceptance of this offer by signing and returning this letter by{' '}
+                    Please confirm your acceptance of this offer by signing and returning this letter by
                     <ContentEditable
                       innerRef={(el) => (fieldRefs.current.joiningDate = el)}
                       html={

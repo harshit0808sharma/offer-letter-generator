@@ -424,7 +424,6 @@ const clearAuthState = useCallback(() => {
     generatePDF,
     pendingLetters,
     recentLetters, 
-    setRecentLetters,
     isAuthenticated,
     cookieExists,
     handleLogout,
