@@ -1,369 +1,412 @@
+'use client'
+import React, { useState } from 'react';
+import { FaFile, FaBriefcase, FaUsers, FaDownload, FaPlus, FaTrash } from 'react-icons/fa';
+import { RxCross2 } from "react-icons/rx";
+import UnderDevelopmentPage from '../components/Layout/UD';
 
+const OfferLetterDashboard = () => {
+    const isDevelopment = true;
+    const [selectedTemplate, setSelectedTemplate] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        candidateName: '',
+        jobTitle: '',
+        joiningDate: '',
+        location: '',
+        salary: '',
+        hrManagerName: '',
+        employmentType: 'Full-time',
+        companyName: 'The Salon Company',
+        companyAddress: 'Lokaci H.Q., Sector 117, Noida',
+        companyPhone: '(555) 123-4567',
+        companyEmail: 'hr@lokaci.com',
+        probationPeriod: '90 days',
+        workingHours: 'Monday to Friday, 9:00 AM to 6:00 PM',
+        offerDeadline: '',
+        officeHours: 'Monday - Friday, 9:00 AM - 5:00 PM',
+        documentsRequired: ['Government ID', 'Educational Certificates', 'Previous Employment Letter']
+    });
 
-// 'use client'
+    const templates = [
+        {
+            id: 1,
+            title: 'Standard Employment Offer',
+            description: 'Perfect for full-time positions with comprehensive benefits',
+            icon: <FaBriefcase className="w-6 h-6 text-blue-600" />,
+            color: 'border-blue-200 hover:border-blue-300'
+        },
+        {
+            id: 2,
+            title: 'Executive Position Offer',
+            description: 'Tailored for senior roles and leadership positions',
+            icon: <FaUsers className="w-6 h-6 text-purple-600" />,
+            color: 'border-purple-200 hover:border-purple-300'
+        },
+        {
+            id: 3,
+            title: 'Internship Offer Letter',
+            description: 'Designed for internship and temporary positions',
+            icon: <FaFile className="w-6 h-6 text-green-600" />,
+            color: 'border-green-200 hover:border-green-300'
+        }
+    ];
 
+    const handleTemplateClick = (template) => {
+        setSelectedTemplate(template);
+        setIsModalOpen(true);
+    };
 
-// import Image from 'next/image';
-// import React, { useState, createContext, useContext } from 'react';
-// import {
-//     FaUser,
-//     FaBriefcase,
-//     FaCalendarAlt,
-//     FaMapMarkerAlt,
-//     FaDollarSign,
-//     FaUserCheck,
-//     FaClock,
-//     FaFilePdf,
-//     FaSave,
-//     FaBuilding,
-//     FaPhone,
-//     FaEnvelope,
-//     FaGlobe
-// } from "react-icons/fa";
+    const handleInputChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
 
+    const addDocument = () => {
+        setFormData(prev => ({
+            ...prev,
+            documentsRequired: [...prev.documentsRequired, '']
+        }));
+    };
 
-// // Context for form data
-// const FormContext = createContext();
+    const removeDocument = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            documentsRequired: prev.documentsRequired.filter((_, i) => i !== index)
+        }));
+    };
 
-// const OfferLetterGenerator = () => {
-//     const [formData, setFormData] = useState({
-//         candidateName: '',
-//         jobTitle: '',
-//         jobType: 'full-time',
-//         joiningDate: '',
-//         location: '',
-//         salary: '',
-//         hrManager: '',
-//         internshipDuration: ''
-//     });
+    const updateDocument = (index, value) => {
+        setFormData(prev => ({
+            ...prev,
+            documentsRequired: prev.documentsRequired.map((doc, i) => i === index ? value : doc)
+        }));
+    };
 
-//     const updateFormData = (field, value) => {
-//         setFormData(prev => ({
-//             ...prev,
-//             [field]: value
-//         }));
-//     };
+    const generatePDF = () => {
+        // In a real implementation, you would use html2canvas and jsPDF here
+        alert('PDF generation would be implemented here using html2canvas and jsPDF');
+        setIsModalOpen(false);
+    };
 
-//     const handleGeneratePDF = () => {
-//         alert('PDF generation would be implemented with a library like jsPDF or Puppeteer');
-//     };
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedTemplate(null);
+    };
 
-//     const handleSaveToPending = () => {
-//         alert('Save to pending functionality would connect to your backend API');
-//     };
+    if(isDevelopment){
+        return(
+            <>
+                <UnderDevelopmentPage/>
+            </>
+        )
+    }
 
-//     return (
-//         <FormContext.Provider value={{ formData, updateFormData }}>
-//             <div className="min-h-screen bg-gray-50">
-//                 {/* Header */}
-//                 <Header />
+    return (
+        <div className="min-h-screen bg-gray-50 font-inter">
+            {/* Navigation Bar */}
+            <nav className="bg-white shadow-sm border-b border-gray-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-16">
+                        <div className="flex items-center space-x-2">
+                            <FaFile className="w-8 h-8 text-blue-600" />
+                            <h1 className="text-2xl font-bold text-gray-900">OfferLetterPro</h1>
+                        </div>
+                        <div className="text-sm text-gray-500">
+                            Dashboard
+                        </div>
+                    </div>
+                </div>
+            </nav>
 
-//                 {/* Main Content */}
-//                 <main className="container mx-auto px-4 py-8">
-//                     <div className="grid lg:grid-cols-2 gap-8">
-//                         {/* Left Side - Form */}
-//                         <FormSection
-//                             onGeneratePDF={handleGeneratePDF}
-//                             onSaveToPending={handleSaveToPending}
-//                         />
+            {/* Main Content */}
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div className="mb-8">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Choose a Template</h2>
+                    <p className="text-lg text-gray-600">Select from our professional offer letter templates</p>
+                </div>
 
-//                         {/* Right Side - Preview */}
-//                         <PreviewSection />
-//                     </div>
-//                 </main>
-//             </div>
-//         </FormContext.Provider>
-//     );
-// };
+                {/* Template Cards */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {templates.map((template) => (
+                        <div
+                            key={template.id}
+                            onClick={() => handleTemplateClick(template)}
+                            className={`bg-white rounded-xl shadow-sm border-2 ${template.color} p-6 cursor-pointer transition-all duration-300 hover:shadow-md hover:-translate-y-1`}
+                        >
+                            <div className="flex items-center space-x-3 mb-4">
+                                <div className="p-2 bg-gray-50 rounded-lg">
+                                    {template.icon}
+                                </div>
+                                <h3 className="text-xl font-semibold text-gray-900">{template.title}</h3>
+                            </div>
+                            <p className="text-gray-600 leading-relaxed">{template.description}</p>
+                            <div className="mt-4 inline-flex items-center text-sm text-blue-600 font-medium">
+                                Use Template →
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </main>
 
-// const Header = () => {
-//     return (
-//         <header className="bg-white shadow-sm border-b border-gray-200">
-//             <div className="container mx-auto px-4 py-4">
-//                 <div className="flex items-center justify-between">
-//                     {/* Logo */}
-//                     <div className="flex items-center space-x-3">
-//                         <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-//                             <FaBuilding className="w-6 h-6 text-white" />
-//                         </div>
-//                         <div>
-//                             <h1 className="text-xl font-bold text-gray-900">Lokaci</h1>
-//                             <p className="text-sm text-gray-500">HR Solutions</p>
-//                         </div>
-//                     </div>
+            {/* Modal */}
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                        {/* Modal Header */}
+                        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center rounded-t-xl">
+                            <div>
+                                <h3 className="text-2xl font-bold text-gray-900">{selectedTemplate?.title}</h3>
+                                <p className="text-gray-600">Fill in the details to generate your offer letter</p>
+                            </div>
+                            <button
+                                onClick={closeModal}
+                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                <RxCross2 className="w-5 h-5" />
+                            </button>
+                        </div>
 
-//                     {/* Navigation */}
-//                     <nav className="hidden md:flex items-center space-x-6">
-//                         <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Dashboard</a>
-//                         <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Templates</a>
-//                         <a href="#" className="text-blue-600 font-medium">Offer Letters</a>
-//                         <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Settings</a>
-//                     </nav>
-//                 </div>
-//             </div>
-//         </header>
-//     );
-// };
+                        {/* Modal Content */}
+                        <div className="p-6">
+                            <div className="grid md:grid-cols-2 gap-6">
+                                {/* Left Column */}
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Candidate Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.candidateName}
+                                            onChange={(e) => handleInputChange('candidateName', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                            placeholder="Enter candidate's full name"
+                                        />
+                                    </div>
 
-// const FormSection = ({ onGeneratePDF, onSaveToPending }) => {
-//     const { formData, updateFormData } = useContext(FormContext);
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Job Title *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.jobTitle}
+                                            onChange={(e) => handleInputChange('jobTitle', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                            placeholder="e.g., Software Engineer"
+                                        />
+                                    </div>
 
-//     return (
-//         <div className="bg-white rounded-xl shadow-lg p-6 h-fit">
-//             <div className="mb-6">
-//                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Offer Letter</h2>
-//                 <p className="text-gray-600">Fill in the candidate details to generate a professional offer letter</p>
-//             </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Joining Date *
+                                        </label>
+                                        <input
+                                            type="date"
+                                            value={formData.joiningDate}
+                                            onChange={(e) => handleInputChange('joiningDate', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        />
+                                    </div>
 
-//             <div className="space-y-6">
-//                 {/* Candidate Name */}
-//                 <FormInput
-//                     label="Candidate Name"
-//                     icon={FaUser}
-//                     type="text"
-//                     placeholder="Enter full name"
-//                     value={formData.candidateName}
-//                     onChange={(value) => updateFormData('candidateName', value)}
-//                 />
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Location *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.location}
+                                            onChange={(e) => handleInputChange('location', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                            placeholder="e.g., New York, NY"
+                                        />
+                                    </div>
 
-//                 {/* Job Title */}
-//                 <FormInput
-//                     label="Job Title"
-//                     icon={FaBriefcase}
-//                     type="text"
-//                     placeholder="Enter job position"
-//                     value={formData.jobTitle}
-//                     onChange={(value) => updateFormData('jobTitle', value)}
-//                 />
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Salary *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.salary}
+                                            onChange={(e) => handleInputChange('salary', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                            placeholder="e.g., $75,000 per year"
+                                        />
+                                    </div>
 
-//                 {/* Job Type */}
-//                 <div className="space-y-2">
-//                     <label className="flex items-center text-sm font-medium text-gray-700">
-//                         <FaUserCheck className="w-4 h-4 mr-2 text-blue-600" />
-//                         Job Type
-//                     </label>
-//                     <select
-//                         value={formData.jobType}
-//                         onChange={(e) => updateFormData('jobType', e.target.value)}
-//                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-//                     >
-//                         <option value="full-time">Full-time</option>
-//                         <option value="part-time">Part-time</option>
-//                         <option value="internship">Internship</option>
-//                         <option value="contract">Contract</option>
-//                     </select>
-//                 </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            HR Manager Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.hrManagerName}
+                                            onChange={(e) => handleInputChange('hrManagerName', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                            placeholder="Enter HR manager's name"
+                                        />
+                                    </div>
 
-//                 {/* Internship Duration - Conditional */}
-//                 {formData.jobType === 'internship' && (
-//                     <FormInput
-//                         label="Internship Duration"
-//                         icon={FaClock}
-//                         type="text"
-//                         placeholder="e.g., 3 months, 6 months"
-//                         value={formData.internshipDuration}
-//                         onChange={(value) => updateFormData('internshipDuration', value)}
-//                     />
-//                 )}
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Employment Type
+                                        </label>
+                                        <select
+                                            value={formData.employmentType}
+                                            onChange={(e) => handleInputChange('employmentType', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        >
+                                            <option value="Full-time">Full-time</option>
+                                            <option value="Part-time">Part-time</option>
+                                            <option value="Contract">Contract</option>
+                                            <option value="Internship">Internship</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-//                 {/* Joining Date */}
-//                 <FormInput
-//                     label="Joining Date"
-//                     icon={FaCalendarAlt}
-//                     type="date"
-//                     value={formData.joiningDate}
-//                     onChange={(value) => updateFormData('joiningDate', value)}
-//                 />
+                                {/* Right Column */}
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Company Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.companyName}
+                                            onChange={(e) => handleInputChange('companyName', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        />
+                                    </div>
 
-//                 {/* Location */}
-//                 <FormInput
-//                     label="Work Location"
-//                     icon={FaMapMarkerAlt}
-//                     type="text"
-//                     placeholder="Enter office location"
-//                     value={formData.location}
-//                     onChange={(value) => updateFormData('location', value)}
-//                 />
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Company Address
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.companyAddress}
+                                            onChange={(e) => handleInputChange('companyAddress', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        />
+                                    </div>
 
-//                 {/* Salary */}
-//                 <FormInput
-//                     label="Salary/Compensation"
-//                     icon={FaDollarSign}
-//                     type="text"
-//                     placeholder="Enter annual salary"
-//                     value={formData.salary}
-//                     onChange={(value) => updateFormData('salary', value)}
-//                 />
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Company Phone
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.companyPhone}
+                                            onChange={(e) => handleInputChange('companyPhone', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        />
+                                    </div>
 
-//                 {/* HR Manager */}
-//                 <FormInput
-//                     label="HR Manager"
-//                     icon={FaUserCheck}
-//                     type="text"
-//                     placeholder="Enter HR manager name"
-//                     value={formData.hrManager}
-//                     onChange={(value) => updateFormData('hrManager', value)}
-//                 />
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Company Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            value={formData.companyEmail}
+                                            onChange={(e) => handleInputChange('companyEmail', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        />
+                                    </div>
 
-//                 {/* Action Buttons */}
-//                 <div className="flex gap-4 pt-4">
-//                     <button
-//                         onClick={onGeneratePDF}
-//                         className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
-//                     >
-//                         <FaFilePdf className="w-5 h-5" />
-//                         <span>Generate PDF</span>
-//                     </button>
-//                     <button
-//                         onClick={onSaveToPending}
-//                         className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 border border-gray-300"
-//                     >
-//                         <FaSave className="w-5 h-5" />
-//                         <span>Save to Pending</span>
-//                     </button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Probation Period
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.probationPeriod}
+                                            onChange={(e) => handleInputChange('probationPeriod', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        />
+                                    </div>
 
-// const FormInput = ({ label, icon: Icon, type, placeholder, value, onChange }) => {
-//     return (
-//         <div className="space-y-2">
-//             <label className="flex items-center text-sm font-medium text-gray-700">
-//                 <Icon className="w-4 h-4 mr-2 text-blue-600" />
-//                 {label}
-//             </label>
-//             <input
-//                 type={type}
-//                 placeholder={placeholder}
-//                 value={value}
-//                 onChange={(e) => onChange(e.target.value)}
-//                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400"
-//             />
-//         </div>
-//     );
-// };
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Office Hours
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.officeHours}
+                                            onChange={(e) => handleInputChange('officeHours', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        />
+                                    </div>
 
-// const PreviewSection = () => {
-//     const { formData } = useContext(FormContext);
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Offer Deadline
+                                        </label>
+                                        <input
+                                            type="date"
+                                            value={formData.offerDeadline}
+                                            onChange={(e) => handleInputChange('offerDeadline', e.target.value)}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
 
-//     const formatDate = (dateString) => {
-//         if (!dateString) return '[Joining Date]';
-//         const date = new Date(dateString);
-//         return date.toLocaleDateString('en-US', {
-//             year: 'numeric',
-//             month: 'long',
-//             day: 'numeric'
-//         });
-//     };
+                            {/* Documents Required */}
+                            <div className="mt-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-3">
+                                    Documents Required
+                                </label>
+                                <div className="space-y-3">
+                                    {formData.documentsRequired.map((doc, index) => (
+                                        <div key={index} className="flex items-center space-x-3">
+                                            <input
+                                                type="text"
+                                                value={doc}
+                                                onChange={(e) => updateDocument(index, e.target.value)}
+                                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                                placeholder={`Document ${index + 1}`}
+                                            />
+                                            <button
+                                                onClick={() => removeDocument(index)}
+                                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            >
+                                                <FaTrash className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        onClick={addDocument}
+                                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
+                                    >
+                                        <FaPlus className="w-4 h-4" />
+                                        <span>Add Document</span>
+                                    </button>
+                                </div>
+                            </div>
 
-//     return (
-//         <div className="bg-white rounded-xl shadow-lg p-6">
-//             <div className="mb-4">
-//                 <h3 className="text-xl font-bold text-gray-900 mb-1">Live Preview</h3>
-//                 <p className="text-gray-600 text-sm">See how your offer letter will look</p>
-//             </div>
+                            {/* Generate Button */}
+                            <div className="mt-8 flex justify-end space-x-4">
+                                <button
+                                    onClick={closeModal}
+                                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={generatePDF}
+                                    className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 font-medium"
+                                >
+                                    <FaDownload className="w-4 h-4" />
+                                    <span>Generate PDF</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
 
-//             {/* Preview Content */}
-//             <div className="bg-white border-2 border-gray-200 rounded-lg p-8 space-y-6 text-sm">
-//                 {/* Company Header */}
-//                 <div className="text-center border-b border-gray-200 pb-6">
-//                     <div className="flex items-center justify-center mb-4">
-//                         <div className="w-16 h-16 bg-black rounded-lg flex items-center justify-center">
-//                             <Image src="/images/LokaciLogo.png" alt='logo' width={200} height={200} />
-
-//                         </div>
-//                     </div>
-//                     {/* <Image src="/images/LokaciLogo.png" alt='logo' width={200} height={200}/> */}
-//                     <h1 className="text-2xl font-bold text-gray-900">Lokaci</h1>
-//                     <div className="text-gray-600 space-y-1 mt-2">
-//                         <div className="flex items-center justify-center space-x-4">
-//                             <span className="flex items-center"><FaEnvelope className="w-4 h-4 mr-1" />hr@lokaci.com</span>
-//                             <span className="flex items-center"><FaPhone className="w-4 h-4 mr-1" />+1 (555) 123-4567</span>
-//                         </div>
-//                         <div className="flex items-center justify-center">
-//                             <FaGlobe className="w-4 h-4 mr-1" />
-//                             <span>www.lokaci.com</span>
-//                         </div>
-//                     </div>
-//                 </div>
-
-//                 {/* Letter Content */}
-//                 <div className="space-y-4">
-//                     <div className="text-right text-gray-600">
-//                         {new Date().toLocaleDateString('en-US', {
-//                             year: 'numeric',
-//                             month: 'long',
-//                             day: 'numeric'
-//                         })}
-//                     </div>
-
-//                     <div>
-//                         <p className="font-medium">Dear {formData.candidateName || '[Candidate Name]'},</p>
-//                     </div>
-
-//                     <div className="space-y-4 text-gray-700 leading-relaxed">
-//                         <p>
-//                             We are pleased to offer you the position of <strong>{formData.jobTitle || '[Job Title]'}</strong> at TechCorp Solutions. We believe your skills and experience will be a valuable addition to our team.
-//                         </p>
-
-//                         <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-//                             <h4 className="font-semibold text-gray-900">Position Details:</h4>
-//                             <div className="grid grid-cols-1 gap-2 text-sm">
-//                                 <div><strong>Position:</strong> {formData.jobTitle || '[Job Title]'}</div>
-//                                 <div><strong>Employment Type:</strong> {formData.jobType ? formData.jobType.charAt(0).toUpperCase() + formData.jobType.slice(1) : '[Job Type]'}</div>
-//                                 {formData.jobType === 'internship' && formData.internshipDuration && (
-//                                     <div><strong>Duration:</strong> {formData.internshipDuration}</div>
-//                                 )}
-//                                 <div><strong>Start Date:</strong> {formatDate(formData.joiningDate)}</div>
-//                                 <div><strong>Location:</strong> {formData.location || '[Work Location]'}</div>
-//                                 <div><strong>Compensation:</strong> {formData.salary || '[Salary/Compensation]'}</div>
-//                             </div>
-//                         </div>
-
-//                         <p>
-//                             Please confirm your acceptance of this offer by signing and returning this letter by [Response Deadline]. We look forward to welcoming you to our team!
-//                         </p>
-
-//                         <p>
-//                             If you have any questions, please don't hesitate to contact {formData.hrManager || '[HR Manager]'} or our HR department.
-//                         </p>
-
-//                         <p>
-//                             Sincerely,<br />
-//                             <strong>{formData.hrManager || '[HR Manager]'}</strong><br />
-//                             <span className="text-gray-600">Human Resources Manager</span><br />
-//                             <span className="text-gray-600">TechCorp Solutions</span>
-//                         </p>
-//                     </div>
-
-//                     {/* Signature Section */}
-//                     <div className="border-t border-gray-200 pt-6 space-y-6">
-//                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-//                             <div>
-//                                 <p className="text-sm text-gray-600 mb-2">Candidate Acceptance:</p>
-//                                 <div className="border-b border-gray-300 mb-2 h-8"></div>
-//                                 <p className="text-xs text-gray-500">{formData.candidateName || '[Candidate Name]'}</p>
-//                                 <p className="text-xs text-gray-500">Date: _______________</p>
-//                             </div>
-//                             <div>
-//                                 <p className="text-sm text-gray-600 mb-2">Company Representative:</p>
-//                                 <div className="border-b border-gray-300 mb-2 h-8"></div>
-//                                 <p className="text-xs text-gray-500">{formData.hrManager || '[HR Manager]'}</p>
-//                                 <p className="text-xs text-gray-500">Date: _______________</p>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-
-//                 {/* Footer */}
-//                 <div className="text-center text-xs text-gray-500 border-t border-gray-200 pt-4">
-//                     <p>This offer is confidential and subject to company policies and applicable laws.</p>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default OfferLetterGenerator;
+export default OfferLetterDashboard;

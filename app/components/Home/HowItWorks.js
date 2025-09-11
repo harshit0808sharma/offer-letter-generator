@@ -72,11 +72,6 @@ const HowItWorks = () => {
 
   return (
     <section className="relative bg-gradient-to-b from-gray-50 to-white py-24 overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-1/4 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-1/4 w-80 h-80 bg-purple-100/50 rounded-full blur-3xl" />
-      </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}

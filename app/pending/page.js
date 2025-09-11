@@ -78,7 +78,6 @@ export default function PendingPage() {
                   className="p-6 sm:p-8 bg-white shadow-xl rounded-2xl flex flex-col sm:flex-row justify-between sm:items-center gap-6 border border-gray-200 transform transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl"
                   variants={itemVariants}
                 >
-                  {/* Letter Details */}
                   <div className="flex-1 text-sm sm:text-base">
                     <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">
                       {letter.candidateName}

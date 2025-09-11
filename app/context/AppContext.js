@@ -50,6 +50,13 @@ const DEFAULT_FORM_DATA = {
     "Address proof documents",
     "Bank account details for salary processing",
   ],
+  description1: "We are pleased to extend this offer of employment to you for the position detailed below. This offer is made based on your qualifications, experience, and the positive impression you made during our interview process.",
+  whatToExpect: [
+      "Comprehensive onboarding program during your first week",
+      "Access to company benefits and professional development opportunities",
+      "Collaborative work environment with experienced team members",
+      "Regular performance reviews and career growth discussions",
+    ],
 };
 
 export const AppProvider = ({ children }) => {

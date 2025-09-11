@@ -33,7 +33,7 @@ const SidebarForm = () => {
           Candidate Information
         </h2>
 
-        <div className="space-y-5">
+        <div className="space-y-5 ">
           {/* Candidate Name */}
           <div>
             <label className="form-label flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">

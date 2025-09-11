@@ -33,7 +33,7 @@ const LetterPreview = ({ previewRef }) => {
 
   return (
     <div className="col-span-2 order-2">
-      <div className="md:rounded-xl overflow-hidden border" style={{ backgroundColor: '#FFFFFF', borderColor: '#60A5FA' }}>
+      <div className="md:rounded-xl shadow-inset overflow-hidden border border-gray-200" style={{ backgroundColor: '#FFFFFF', boxShadow: "inset 0 2px 8px rgba(0,0,0,0.3)" }}>
         {/* Header */}
         <div
           className="p-4 flex items-center gap-2"
@@ -75,11 +75,11 @@ const LetterPreview = ({ previewRef }) => {
                 </div>
                 <ContentEditable
                   innerRef={(el) => (fieldRefs.current.companyName = el)}
-                  html={formData.companyName || "[Company Name]"} 
+                  html={formData.companyName || "[Company Name]"}
                   onChange={(e) => handleInputChange("companyName", e.target.value)}
                   tagName="h1"
                   className="text-xl font-bold mb-2"
-                  style={{ color: "#111827", direction: "ltr" }}
+                  style={{ color: "#111827", outline: "none", direction: "ltr" }}
                 />
 
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
@@ -94,7 +94,7 @@ const LetterPreview = ({ previewRef }) => {
                   }}
                   tagName="p"
                   className="text-xs"
-                  style={{ color: "#6B7280", direction: "ltr" }}
+                  style={{ color: "#6B7280", outline: "none", direction: "ltr" }}
                 />
 
               </div>
@@ -112,7 +112,7 @@ const LetterPreview = ({ previewRef }) => {
                     onChange={(e) => handleInputChange('candidateName', e.target.value)}
                     tagName="p"
                     className="font-semibold text-base"
-                    style={{ direction: 'ltr' }}
+                    style={{ direction: 'ltr', outline: "none" }}
                   />
 
                   <p className="font-semibold text-lg">Subject: Offer of Employment</p>
@@ -125,7 +125,7 @@ const LetterPreview = ({ previewRef }) => {
                       onChange={(e) => handleInputChange('candidateName', e.target.value)}
                       tagName="span"
                       className="font-semibold"
-                      style={{ direction: 'ltr' }}
+                      style={{ direction: 'ltr', outline: "none" }}
                     />
                     ,
                   </p>
@@ -133,11 +133,13 @@ const LetterPreview = ({ previewRef }) => {
 
                   <p >{roleDescription}</p>
 
-                  <p>
-                    We are pleased to extend this offer of employment to you for the position detailed below.
-                    This offer is made based on your qualifications, experience, and the positive impression
-                    you made during our interview process.
-                  </p>
+                  <ContentEditable
+                    innerRef={(el) => (fieldRefs.current.description1 = el)}
+                    html={formData.description1 || '[Candidate Name]'}
+                    onChange={(e) => handleInputChange('description1', e.target.value)}
+                    tagName="span"
+                    style={{ direction: 'ltr', outline: "none" }}
+                  />
 
                   <div>
                     <p className="font-semibold mb-4">Position Details:</p>
@@ -152,7 +154,7 @@ const LetterPreview = ({ previewRef }) => {
                           html={formData.jobTitle || '[Job Title]'}
                           onChange={(e) => handleInputChange('jobTitle', e.target.value)}
                           tagName="span"
-                          style={{ direction: 'ltr' }}
+                          style={{ direction: 'ltr', outline: "none" }}
                         />
                       </p>
 
@@ -163,7 +165,7 @@ const LetterPreview = ({ previewRef }) => {
                           html={formatDate(formData.joiningDate)}
                           onChange={(e) => handleInputChange('joiningDate', e.target.value)}
                           tagName="span"
-                          style={{ direction: 'ltr' }}
+                          style={{ direction: 'ltr', outline: "none" }}
                         />
                       </p>
 
@@ -174,7 +176,7 @@ const LetterPreview = ({ previewRef }) => {
                           html={formData.location || '[Work Location]'}
                           onChange={(e) => handleInputChange('location', e.target.value)}
                           tagName="span"
-                          style={{ direction: 'ltr' }}
+                          style={{ direction: 'ltr', outline: "none" }}
                         />
                       </p>
 
@@ -185,7 +187,7 @@ const LetterPreview = ({ previewRef }) => {
                           html={formatSalary(formData.salary)}
                           onChange={(e) => handleInputChange('salary', e.target.value)}
                           tagName="span"
-                          style={{ direction: 'ltr' }}
+                          style={{ direction: 'ltr', outline: "none" }}
                         />{' '}
                         per year
                       </p>
@@ -197,18 +199,34 @@ const LetterPreview = ({ previewRef }) => {
                           html={formData.employmentType || '[Employment Type]'}
                           onChange={(e) => handleInputChange('employmentType', e.target.value)}
                           tagName="span"
-                          style={{ direction: 'ltr' }}
+                          style={{ direction: 'ltr', outline: "none" }}
                         />
                       </p>
                     </div>
                   </div>
                   <div>
                     <p className="font-semibold mb-3">What to Expect:</p>
-                    <ul className="ml-6 space-y-1" style={{ listStyleType: 'disc' }}>
-                      <li>Comprehensive onboarding program during your first week</li>
-                      <li>Access to company benefits and professional development opportunities</li>
-                      <li>Collaborative work environment with experienced team members</li>
-                      <li>Regular performance reviews and career growth discussions</li>
+                    <ul className="ml-6 space-y-1" style={{ listStyleType: "disc" }}>
+                      {formData.whatToExpect.map((item, index) => (
+                        <ContentEditable
+                          key={index}
+                          innerRef={(el) => {
+                            if (!fieldRefs.current.whatToExpect) fieldRefs.current.whatToExpect = [];
+                            fieldRefs.current.whatToExpect[index] = el;
+                          }}
+                          html={item}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setFormData((prev) => {
+                              const updated = [...prev.whatToExpect];
+                              updated[index] = value;
+                              return { ...prev, whatToExpect: updated };
+                            });
+                          }}
+                          tagName="li"
+                          style={{ outline: "none" }} // remove the blue outline when editing
+                        />
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -361,7 +379,7 @@ const LetterPreview = ({ previewRef }) => {
                   onChange={(e) => handleInputChange('companyName', e.target.value)}
                   tagName="h1"
                   className="text-xl font-bold mb-2"
-                  style={{ color: '#111827', direction: 'ltr' }}
+                  style={{ color: '#111827', outline: "none", direction: 'ltr' }}
                 />
 
                 <p className="text-sm mb-1" style={{ color: '#4B5563' }}>Professional Services</p>
@@ -376,7 +394,7 @@ const LetterPreview = ({ previewRef }) => {
                   }}
                   tagName="p"
                   className="text-xs"
-                  style={{ color: "#6B7280", direction: "ltr" }}
+                  style={{ color: "#6B7280", outline: "none", direction: "ltr" }}
                 />
               </div>
 
@@ -394,7 +412,7 @@ const LetterPreview = ({ previewRef }) => {
                       }
                       onChange={(e) => handleInputChange('joiningDate', e.target.value)}
                       tagName="strong"
-                      style={{ fontWeight: 600 }}
+                      style={{ fontWeight: 600, outline: "none" }}
                     />
                     . We look forward to welcoming you to our team and are excited about the contributions
                     you will make to our continued success.
@@ -435,7 +453,7 @@ const LetterPreview = ({ previewRef }) => {
                         html={formData.companyEmail || '[Company Email]'}
                         onChange={(e) => handleInputChange('companyEmail', e.target.value)}
                         tagName="p"
-                        className="mb-1"
+                        className="mb-1 outline-none"
                       />
 
                       <ContentEditable
@@ -443,7 +461,7 @@ const LetterPreview = ({ previewRef }) => {
                         html={formData.companyPhone || '[Company Phone]'}
                         onChange={(e) => handleInputChange('companyPhone', e.target.value)}
                         tagName="p"
-                        className="mb-1"
+                        className="mb-1 outline-none"
                       />
 
                       <ContentEditable
@@ -451,6 +469,7 @@ const LetterPreview = ({ previewRef }) => {
                         html={formData.officeHours || '[Office Hours]'}
                         onChange={(e) => handleInputChange('officeHours', e.target.value)}
                         tagName="p"
+                        style={{outline: "none"}}
                       />
                     </div>
                   </div>
@@ -465,7 +484,7 @@ const LetterPreview = ({ previewRef }) => {
                         html={formData.hrManagerName || '[HR Manager Name]'}
                         onChange={(e) => handleInputChange('hrManagerName', e.target.value)}
                         tagName="p"
-                        className="font-semibold"
+                        className="font-semibold outline-none"
                       />
                       <p className="text-xs" style={{ color: '#6B7280' }}>Human Resources Manager</p>
                       <p className="text-xs" style={{ color: '#6B7280' }}>Lokaci Private Limited</p>
