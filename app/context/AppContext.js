@@ -61,6 +61,7 @@ export const AppProvider = ({ children }) => {
   const [recentLetters, setRecentLetters] = useState([]);
   const [cookieExists, setCookieExists] = useState("notExists");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [theme, setTheme] = useState(false);
 
   const router = useRouter();
   const previewRef = useRef();
@@ -412,7 +413,9 @@ const clearAuthState = useCallback(() => {
     handleLogout,
     activeField,
     setActiveField,
-    fieldRefs
+    fieldRefs,
+    theme,
+    setTheme
   }), [
     category,
     formData,
@@ -427,7 +430,8 @@ const clearAuthState = useCallback(() => {
     isAuthenticated,
     cookieExists,
     handleLogout,
-    activeField
+    activeField,
+    theme
   ]);
 
   return (

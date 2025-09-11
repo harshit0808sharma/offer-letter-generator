@@ -140,6 +140,9 @@ const Header = () => {
                   </span>
                 </button>
               )}
+              {/* {isUserLoggedIn && (
+                <ProfileMenu />
+              )} */}
             </div>
 
             {/* Mobile Menu Toggle */}

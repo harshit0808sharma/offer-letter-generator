@@ -8,7 +8,7 @@ import { categoryTemplates } from '@/app/assets/data';
 import ContentEditable from 'react-contenteditable';
 
 const LetterPreview = ({ previewRef }) => {
-  const { formData, fieldRefs, handleInputChange } = useContext(AppContext);
+  const { formData, setFormData, fieldRefs, handleInputChange } = useContext(AppContext);
   const containerRef = useRef(null);
 
 
