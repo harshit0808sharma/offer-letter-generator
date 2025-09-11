@@ -22,7 +22,7 @@ import {
 } from "react-icons/fa";
 
 const SidebarForm = () => {
-  const { formData, setFormData, handleInputChange, generatePDF, category, savePendingLetter, setActiveField } = useContext(AppContext);
+  const { formData, setFormData, handleInputChange, generatePDF, category, savePendingLetter, setActiveField, fieldRefs } = useContext(AppContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (

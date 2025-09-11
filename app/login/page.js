@@ -36,10 +36,7 @@ export default function LoginPage() {
                     JSON.stringify({ value: "exists", expiresAt })
                 );
 
-                toast.success("Login successful! Redirecting...", {
-                    position: "top-right",
-                    autoClose: 2000,
-                });
+                toast.success("Login successful! Redirecting...");
 
                 setTimeout(() => router.push("/"), 1000);
             } else {
