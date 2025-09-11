@@ -1,5 +1,4 @@
-'use client'
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { 
   FaCog, 
   FaHammer, 
@@ -23,34 +22,34 @@ import Link from 'next/link';
 
 
 const UnderDevelopmentPage = () => {
-  const [progress, setProgress] = useState(0);
-  const [currentTask, setCurrentTask] = useState('Initializing...');
+//   const [progress, setProgress] = useState(0);
+//   const [currentTask, setCurrentTask] = useState('Initializing...');
 
-  const tasks = [
-    'Designing UI Components...',
-    'Building Backend APIs...',
-    'Optimizing Performance...',
-    'Testing Features...',
-    'Finalizing Details...'
-  ];
+//   const tasks = [
+//     'Designing UI Components...',
+//     'Building Backend APIs...',
+//     'Optimizing Performance...',
+//     'Testing Features...',
+//     'Finalizing Details...'
+//   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        const newProgress = prev >= 85 ? 15 : prev + Math.random() * 10;
-        return Math.min(newProgress, 85);
-      });
-    }, 2000);
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setProgress(prev => {
+//         const newProgress = prev >= 85 ? 15 : prev + Math.random() * 10;
+//         return Math.min(newProgress, 85);
+//       });
+//     }, 2000);
 
-    const taskInterval = setInterval(() => {
-      setCurrentTask(tasks[Math.floor(Math.random() * tasks.length)]);
-    }, 3000);
+//     const taskInterval = setInterval(() => {
+//       setCurrentTask(tasks[Math.floor(Math.random() * tasks.length)]);
+//     }, 3000);
 
-    return () => {
-      clearInterval(interval);
-      clearInterval(taskInterval);
-    };
-  }, [tasks]);
+//     return () => {
+//       clearInterval(interval);
+//       clearInterval(taskInterval);
+//     };
+//   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 relative overflow-hidden">
@@ -161,19 +160,19 @@ const UnderDevelopmentPage = () => {
                 <div className="mb-8">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-semibold text-gray-700">Development Progress</span>
-                    <span className="text-sm font-bold text-blue-600">{Math.round(progress)}%</span>
+                    {/* <span className="text-sm font-bold text-blue-600">{Math.round(progress)}%</span> */}
                   </div>
                   
                   <div className="w-full bg-gray-200 rounded-full h-3 mb-4 overflow-hidden">
                     <div 
                       className="bg-gradient-to-r from-blue-500 to-indigo-500 h-3 rounded-full transition-all duration-1000 relative"
-                      style={{ width: `${progress}%` }}
+                    //   style={{ width: `${progress}%` }}
                     >
                       <div className="absolute inset-0 bg-white opacity-30 animate-pulse"></div>
                     </div>
                   </div>
                   
-                  <p className="text-sm text-gray-500 animate-pulse">{currentTask}</p>
+                  {/* <p className="text-sm text-gray-500 animate-pulse">{currentTask}</p> */}
                 </div>
 
                 {/* Feature Preview */}
