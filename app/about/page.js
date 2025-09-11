@@ -11,6 +11,7 @@ import {
 import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import UnderDevelopmentPage from '../components/Layout/UD';
+import Image from 'next/image';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -122,9 +123,11 @@ const AboutPage = () => {
                 className="text-center max-w-xs"
               >
                 {member.image ? (
-                  <img
+                  <Image
                     src={member.image}
                     alt={member.name}
+                    width={400}
+                    height={400}
                     className="w-36 h-36 rounded-full mx-auto mb-5 object-cover shadow-xl border-4 border-indigo-200"
                   />
                 ) : (

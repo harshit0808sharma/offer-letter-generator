@@ -50,7 +50,7 @@ const UnderDevelopmentPage = () => {
       clearInterval(interval);
       clearInterval(taskInterval);
     };
-  }, []);
+  }, [tasks]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 relative overflow-hidden">
@@ -146,7 +146,7 @@ const UnderDevelopmentPage = () => {
               {/* Right Side - Content */}
               <div className="text-center lg:text-left">
                 <h1 className="text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight">
-                  We're Building
+                  We are Building
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-700 block">
                     Something Amazing
                   </span>
