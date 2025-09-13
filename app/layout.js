@@ -2,6 +2,7 @@ import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import { AppProvider } from "./context/AppContext";
 import { Montserrat } from 'next/font/google';
+import { AuthProvider } from "./context/AuthContext";
 
 export const metadata = {
   title: "Lokaci Offer Letter",
@@ -19,10 +20,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <AppProvider>
-          {children}
-          <ToastContainer position="top-right" />
-        </AppProvider>
+        <AuthProvider>
+          <AppProvider>
+            {children}
+            <ToastContainer position="top-right" />
+          </AppProvider>
+        </AuthProvider>
       </body>
     </html>
   );

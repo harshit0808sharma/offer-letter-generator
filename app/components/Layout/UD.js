@@ -22,34 +22,6 @@ import Link from 'next/link';
 
 
 const UnderDevelopmentPage = () => {
-//   const [progress, setProgress] = useState(0);
-//   const [currentTask, setCurrentTask] = useState('Initializing...');
-
-//   const tasks = [
-//     'Designing UI Components...',
-//     'Building Backend APIs...',
-//     'Optimizing Performance...',
-//     'Testing Features...',
-//     'Finalizing Details...'
-//   ];
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       setProgress(prev => {
-//         const newProgress = prev >= 85 ? 15 : prev + Math.random() * 10;
-//         return Math.min(newProgress, 85);
-//       });
-//     }, 2000);
-
-//     const taskInterval = setInterval(() => {
-//       setCurrentTask(tasks[Math.floor(Math.random() * tasks.length)]);
-//     }, 3000);
-
-//     return () => {
-//       clearInterval(interval);
-//       clearInterval(taskInterval);
-//     };
-//   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 relative overflow-hidden">
@@ -172,31 +144,7 @@ const UnderDevelopmentPage = () => {
                     </div>
                   </div>
                   
-                  {/* <p className="text-sm text-gray-500 animate-pulse">{currentTask}</p> */}
                 </div>
-
-                {/* Feature Preview */}
-                {/* <div className="grid grid-cols-2 gap-4 mb-8">
-                  <div className="bg-blue-50 rounded-xl p-4 text-center hover:bg-blue-100 transition-colors">
-                    <FaDesktop className="text-2xl text-blue-500 mx-auto mb-2" />
-                    <div className="text-sm font-semibold text-gray-700">Responsive Design</div>
-                  </div>
-                  
-                  <div className="bg-yellow-50 rounded-xl p-4 text-center hover:bg-yellow-100 transition-colors">
-                    <FaMobile className="text-2xl text-yellow-500 mx-auto mb-2" />
-                    <div className="text-sm font-semibold text-gray-700">Mobile Optimized</div>
-                  </div>
-                  
-                  <div className="bg-green-50 rounded-xl p-4 text-center hover:bg-green-100 transition-colors">
-                    <FaRocket className="text-2xl text-green-500 mx-auto mb-2" />
-                    <div className="text-sm font-semibold text-gray-700">Fast Performance</div>
-                  </div>
-                  
-                  <div className="bg-purple-50 rounded-xl p-4 text-center hover:bg-purple-100 transition-colors">
-                    <MdDeveloperMode className="text-2xl text-purple-500 mx-auto mb-2" />
-                    <div className="text-sm font-semibold text-gray-700">Modern Tech</div>
-                  </div>
-                </div> */}
 
                 {/* CTA Button */}
                 <Link href="/" className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">

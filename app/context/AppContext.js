@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { PDF_CONFIG } from "../config/pdfConfig";
 
 export const AppContext = createContext();
 
@@ -21,11 +22,6 @@ const WATERMARK_CONFIG = {
   src: "/images/logo.png"
 };
 
-const PDF_CONFIG = {
-  margin: 20,
-  scale: 2,
-  quality: 1.0
-};
 
 const DEFAULT_FORM_DATA = {
   candidateName: "",
@@ -52,11 +48,11 @@ const DEFAULT_FORM_DATA = {
   ],
   description1: "We are pleased to extend this offer of employment to you for the position detailed below. This offer is made based on your qualifications, experience, and the positive impression you made during our interview process.",
   whatToExpect: [
-      "Comprehensive onboarding program during your first week",
-      "Access to company benefits and professional development opportunities",
-      "Collaborative work environment with experienced team members",
-      "Regular performance reviews and career growth discussions",
-    ],
+    "Comprehensive onboarding program during your first week",
+    "Access to company benefits and professional development opportunities",
+    "Collaborative work environment with experienced team members",
+    "Regular performance reviews and career growth discussions",
+  ],
 };
 
 export const AppProvider = ({ children }) => {
@@ -125,13 +121,13 @@ export const AppProvider = ({ children }) => {
     return false;
   }, [getStorageItem]);
 
-const clearAuthState = useCallback(() => {
-  Cookies.remove("authToken", { path: "/" });
-  localStorage.removeItem(STORAGE_KEYS.COOKIE_EXISTS);
-  setIsAuthenticated(false);
-  setCookieExists(null);
-  router.push("/login"); 
-}, [router]);
+  const clearAuthState = useCallback(() => {
+    Cookies.remove("authToken", { path: "/" });
+    localStorage.removeItem(STORAGE_KEYS.COOKIE_EXISTS);
+    setIsAuthenticated(false);
+    setCookieExists(null);
+    router.push("/login");
+  }, [router]);
 
 
   useEffect(() => {
@@ -265,8 +261,8 @@ const clearAuthState = useCallback(() => {
   //   toast.info("Letter removed from recent.");
   // }, []);
   const deleteAllRecentLetters = useCallback(() => {
-    setRecentLetters([]); 
-    localStorage.removeItem(STORAGE_KEYS.RECENT_LETTERS); 
+    setRecentLetters([]);
+    localStorage.removeItem(STORAGE_KEYS.RECENT_LETTERS);
     toast.info("All recent letters have been removed.");
   }, []);
 
@@ -347,48 +343,285 @@ const clearAuthState = useCallback(() => {
     resetFormData();
   }, [formData, category, resetFormData]);
 
-  const generatePDF = useCallback(async () => {
-    if (!validateRequiredFields()) {
-      toast.error("Please fill in all required fields before generating the letter.");
+const generatePDF = useCallback(async () => {
+  if (!validateRequiredFields()) {
+    toast.error("Please fill in all required fields before generating the letter.");
+    return;
+  }
+
+  try {
+    const pages = document.querySelectorAll(".page");
+    if (!pages.length) {
+      toast.error("No pages found to print.");
       return;
     }
 
+    const pdf = new jsPDF("p", "pt", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const headerHeight = 120;
+    const footerHeight = 30;
+    const margin = PDF_CONFIG?.margin ?? { top: 40, left: 40, right: 40, bottom: 40 };
+
+    // Validate that there's enough space for content
+    const availableContentHeight = pageHeight - margin.top - margin.bottom - headerHeight - footerHeight;
+    if (availableContentHeight <= 50) {
+      throw new Error("Page margins and header/footer are too large - no space left for content.");
+    }
+
+    // Load watermark and logo
+    const watermarkImg = await loadImage(WATERMARK_CONFIG.src);
+    let logoBase64 = null;
     try {
-      const pages = document.querySelectorAll(".page");
-      const pdf = new jsPDF("p", "pt", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const watermarkImg = await loadImage(WATERMARK_CONFIG.src);
-
-      for (let i = 0; i < pages.length; i++) {
-        const canvas = await html2canvas(pages[i], {
-          scale: PDF_CONFIG.scale,
-          scrollY: -window.scrollY
+      const logoResp = await fetch('/images/LokaciLogo.png');
+      if (logoResp.ok) {
+        const logoBlob = await logoResp.blob();
+        logoBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(logoBlob);
         });
+      }
+    } catch (err) {
+      console.warn("Logo loading failed:", err);
+    }
 
-        const finalCanvas = addWatermarkToCanvas(canvas, watermarkImg);
-        const imgData = finalCanvas.toDataURL("image/jpeg", PDF_CONFIG.quality);
+    const drawHeader = (pdfDoc, logo) => {
+      const centerX = pageWidth / 2;
+      const startY = margin.top;
 
-        const imgWidth = pageWidth - PDF_CONFIG.margin * 2;
-        const imgHeight = (finalCanvas.height * imgWidth) / finalCanvas.width;
+      // Draw header background (optional)
+      pdfDoc.setFillColor(248, 250, 252);
+      pdfDoc.rect(margin.left, startY, pageWidth - margin.left - margin.right, headerHeight, 'F');
 
-        if (i > 0) pdf.addPage();
-        pdf.addImage(imgData, "JPEG", PDF_CONFIG.margin, PDF_CONFIG.margin, imgWidth, imgHeight);
-
-        pdf.setFontSize(10);
-        pdf.text(`Page ${i + 1}`, pageWidth / 2, pageHeight - 20, { align: "center" });
+      if (logo) {
+        const logoSize = 48;
+        const logoX = centerX - logoSize / 2;
+        const logoY = startY + 10;
+        pdfDoc.addImage(logo, "PNG", logoX, logoY, logoSize, logoSize);
       }
 
-      pdf.save(`${formData.candidateName}_Offer_Letter.pdf`);
-      saveToRecentLetters();
-      toast.success("Offer letter generated and saved to recent!");
-    } catch (error) {
-      console.error("PDF generation error:", error);
-      toast.error("Error generating PDF. Please try again.");
-    }
-  }, [validateRequiredFields, formData.candidateName, loadImage, addWatermarkToCanvas, saveToRecentLetters]);
+      // Company name
+      pdfDoc.setFontSize(20);
+      pdfDoc.setFont("times", "bold");
+      pdfDoc.setTextColor(17, 24, 39);
+      pdfDoc.text(formData.companyName || '[Company Name]', centerX, startY + (logo ? 75 : 30), { align: "center" });
 
+      // Subtitle
+      pdfDoc.setFontSize(14);
+      pdfDoc.setFont("times", "normal");
+      pdfDoc.setTextColor(75, 85, 99);
+      pdfDoc.text("Professional Services", centerX, startY + (logo ? 95 : 50), { align: "center" });
+
+      // Address and contact
+      pdfDoc.setFontSize(12);
+      pdfDoc.setTextColor(107, 114, 128);
+      const addressText = `${formData.companyAddress || '[Company Address]'} | Phone: ${formData.companyPhone || '[Company Phone]'}`;
+      pdfDoc.text(addressText, centerX, startY + (logo ? 115 : 70), { 
+        align: "center", 
+        maxWidth: pageWidth - margin.left - margin.right - 20 
+      });
+    };
+
+    const drawFooter = (pdfDoc, pageNumber, totalPages) => {
+      const footerY = pageHeight - margin.bottom - 10;
+      
+      // Page number
+      pdfDoc.setFontSize(10);
+      pdfDoc.setTextColor(100, 100, 100);
+      pdfDoc.text(`Page ${pageNumber}${totalPages ? ` of ${totalPages}` : ''}`, pageWidth / 2, footerY, { align: 'center' });
+      
+      // Optional footer line
+      pdfDoc.setDrawColor(200, 200, 200);
+      pdfDoc.line(margin.left, footerY - 15, pageWidth - margin.right, footerY - 15);
+    };
+
+    let currentPageNumber = 0;
+    let isFirstPage = true;
+    const allCanvases = [];
+
+    // First pass: convert all pages to canvases
+    for (let i = 0; i < pages.length; i++) {
+      const page = pages[i];
+      
+      // Check if page has actual content
+      const hasContent = page.textContent?.trim() || page.querySelector('img, canvas, svg');
+      if (!hasContent) {
+        console.log(`Skipping empty page ${i + 1}`);
+        continue;
+      }
+
+      const canvas = await html2canvas(page, {
+        scale: PDF_CONFIG?.scale ?? Math.max(1.5, window.devicePixelRatio || 1),
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#FFFFFF',
+        logging: false,
+        width: page.scrollWidth,
+        height: page.scrollHeight,
+        onclone: (clonedDoc) => {
+          // Ensure all elements are visible in the clone
+          const elements = clonedDoc.querySelectorAll('*');
+          elements.forEach(el => {
+            if (el.style) {
+              el.style.transform = '';
+              el.style.transformOrigin = '';
+            }
+          });
+        }
+      });
+
+      if (canvas.width === 0 || canvas.height === 0) {
+        console.warn(`Canvas for page ${i + 1} has zero dimensions, skipping`);
+        continue;
+      }
+
+      const finalCanvas = addWatermarkToCanvas(canvas, watermarkImg);
+      allCanvases.push(finalCanvas);
+    }
+
+    if (allCanvases.length === 0) {
+      toast.error("No content found to generate PDF.");
+      return;
+    }
+
+    // Second pass: process canvases and create PDF pages
+    for (let canvasIndex = 0; canvasIndex < allCanvases.length; canvasIndex++) {
+      const finalCanvas = allCanvases[canvasIndex];
+      
+      // Calculate dimensions and conversion factors
+      const contentWidthPt = pageWidth - (margin.left + margin.right);
+      const pxPerPt = finalCanvas.width / contentWidthPt;
+      const totalContentHeightPt = finalCanvas.height / pxPerPt;
+      const availableHeightPt = availableContentHeight;
+
+      let remainingHeightPt = totalContentHeightPt;
+      let yOffsetPt = 0;
+
+      // Split canvas into pages
+      while (remainingHeightPt > 0) {
+        const sliceHeightPt = Math.min(remainingHeightPt, availableHeightPt);
+        const sliceHeightPx = Math.max(1, Math.round(sliceHeightPt * pxPerPt));
+        const sourceYpx = Math.round(yOffsetPt * pxPerPt);
+
+        // Defensive bounds checking
+        const maxAvailablePx = Math.max(0, finalCanvas.height - sourceYpx);
+        const actualSliceHeightPx = Math.min(sliceHeightPx, maxAvailablePx);
+        
+        if (actualSliceHeightPx <= 0) {
+          console.warn('No more content to slice, breaking');
+          break;
+        }
+
+        const actualSliceHeightPt = actualSliceHeightPx / pxPerPt;
+
+        // Create slice canvas with proper error handling
+        const sliceCanvas = document.createElement('canvas');
+        sliceCanvas.width = finalCanvas.width;
+        sliceCanvas.height = actualSliceHeightPx;
+        
+        const sliceCtx = sliceCanvas.getContext('2d');
+        if (!sliceCtx) {
+          throw new Error('Failed to get 2D context for slice canvas');
+        }
+        
+        sliceCtx.imageSmoothingEnabled = true;
+        sliceCtx.imageSmoothingQuality = 'high';
+        
+        try {
+          sliceCtx.drawImage(
+            finalCanvas,
+            0, sourceYpx,
+            finalCanvas.width, actualSliceHeightPx,
+            0, 0,
+            sliceCanvas.width, sliceCanvas.height
+          );
+        } catch (drawError) {
+          console.error('Error drawing image slice:', drawError);
+          throw new Error(`Failed to create content slice: ${drawError.message}`);
+        }
+
+        // Convert to data URL with error handling
+        let sliceImgData;
+        try {
+          sliceImgData = sliceCanvas.toDataURL('image/jpeg', PDF_CONFIG?.quality ?? 0.92);
+          if (!sliceImgData || sliceImgData === 'data:,') {
+            throw new Error('Canvas toDataURL returned empty result');
+          }
+        } catch (err) {
+          console.error('toDataURL failed:', err);
+          throw new Error(`Failed to convert content to image: ${err.message}`);
+        }
+
+        // Add new page (except for the very first page)
+        if (!isFirstPage) {
+          pdf.addPage();
+        }
+        isFirstPage = false;
+        currentPageNumber++;
+
+        // Always draw header and footer
+        drawHeader(pdf, logoBase64);
+        drawFooter(pdf, currentPageNumber);
+
+        // Add content image
+        try {
+          pdf.addImage(
+            sliceImgData, 
+            'JPEG', 
+            margin.left, 
+            margin.top + headerHeight + 10, 
+            contentWidthPt, 
+            actualSliceHeightPt
+          );
+        } catch (imgError) {
+          console.error('Error adding image to PDF:', imgError);
+          throw new Error(`Failed to add content to PDF: ${imgError.message}`);
+        }
+
+        // Update for next iteration
+        remainingHeightPt -= actualSliceHeightPt;
+        yOffsetPt += actualSliceHeightPt;
+
+        // Clean up slice canvas
+        sliceCanvas.width = 0;
+        sliceCanvas.height = 0;
+
+        // Safety check to prevent infinite loops
+        if (remainingHeightPt > 0 && actualSliceHeightPt === 0) {
+          console.warn('No progress made in slicing, breaking to prevent infinite loop');
+          break;
+        }
+      }
+    }
+
+    // Generate filename and save
+    const safeCandidateName = (formData.candidateName || 'Candidate')
+      .replace(/[^a-zA-Z0-9\s-_]/g, '')
+      .replace(/\s+/g, '_')
+      .substring(0, 50);
+    const filename = `${safeCandidateName}_Offer_Letter_${new Date().toISOString().split('T')[0]}.pdf`;
+    
+    pdf.save(filename);
+
+    if (saveToRecentLetters) {
+      try {
+        await saveToRecentLetters();
+      } catch (saveError) {
+        console.warn('Failed to save to recent letters:', saveError);
+      }
+    }
+
+    toast.success(`Offer letter generated successfully! (${currentPageNumber} pages)`);
+
+  } catch (err) {
+    console.error("PDF generation error:", err);
+    const errorMessage = err?.message || String(err);
+    toast.error(`Error generating PDF: ${errorMessage}. Please try again.`);
+    
+  }
+}, [validateRequiredFields, formData, loadImage, addWatermarkToCanvas, saveToRecentLetters]);
   const handleLogout = useCallback(() => {
     console.log('Starting logout process...');
     setIsLoggingOut(true);
@@ -408,11 +641,11 @@ const clearAuthState = useCallback(() => {
     savePendingLetter,
     deletePendingLetter,
     editPendingLetter,
-    deleteAllRecentLetters, 
+    deleteAllRecentLetters,
     generatePDF,
     previewRef,
     pendingLetters,
-    recentLetters, 
+    recentLetters,
     isAuthenticated,
     setIsAuthenticated,
     cookieExists,
@@ -433,7 +666,7 @@ const clearAuthState = useCallback(() => {
     deleteAllRecentLetters,
     generatePDF,
     pendingLetters,
-    recentLetters, 
+    recentLetters,
     isAuthenticated,
     cookieExists,
     handleLogout,

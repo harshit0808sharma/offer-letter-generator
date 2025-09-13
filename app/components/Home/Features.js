@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 const features = [
   {
     icon: <FaBook className="w-8 h-8 text-blue-600" />,
-    title: 'Professional Templates',
+    title: 'Professional Offer Letter',
     desc: 'Automatically populate offer letters with smart templates tailored for your company.',
   },
   {
@@ -16,12 +16,12 @@ const features = [
   },
   {
     icon: <FaPalette className="w-8 h-8 text-blue-600" />,
-    title: 'Custom Branding',
+    title: 'Our Branding',
     desc: "Integrate your company's logo, colors, and style for a professional touch.",
   },
   {
     icon: <FaMobileAlt className="w-8 h-8 text-blue-600" />,
-    title: 'Cross-Platform Access',
+    title: 'Our Internal Use',
     desc: 'Use the platform on desktop, tablet, or mobile without losing functionality.',
   },
 ];
@@ -87,7 +87,7 @@ const FeaturesSection = () => {
               className="group"
               variants={itemVariants}
             >
-              <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 h-full transition-all duration-300 hover:shadow-lg hover:border-blue-200 hover:-translate-y-1">
+              <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 h-full transition-all duration-300 hover:shadow-lg hover:border-blue-400 hover:-translate-y-1">
                 
                 {/* Icon */}
                 <div className="flex justify-center mb-6">
