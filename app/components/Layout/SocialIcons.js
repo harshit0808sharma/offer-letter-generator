@@ -5,11 +5,11 @@ import Link from "next/link";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaGooglePlusG, FaInstagram } from "react-icons/fa";
 
 const socialLinks = [
-  { icon: <FaFacebookF />, bg: "bg-[#3b5999]", href: "https://www.facebook.com/LokaciOfficial" },
-  { icon: <FaTwitter />, bg: "bg-[#55acee]", href: "https://x.com/lokaciofficial" },
-  { icon: <FaLinkedinIn />, bg: "bg-[#0077b5]", href: "https://www.linkedin.com/company/lokaci-private-limited/" },
-  { icon: <FaGooglePlusG />, bg: "bg-[#dd4b39]", href: "https://lokaci.com/" },
-  { icon: <FaInstagram />, bg: "bg-[#dd2a7b]", href: "https://www.instagram.com/lokaciofficial?igsh=Z3phaXBiNnZrd2Fy" },
+  { icon: <FaFacebookF />, bg: "bg-[#3b5999]", href: "https://www.facebook.com" },
+  { icon: <FaTwitter />, bg: "bg-[#55acee]", href: "https://x.com" },
+  { icon: <FaLinkedinIn />, bg: "bg-[#0077b5]", href: "https://www.linkedin.com" },
+  { icon: <FaGooglePlusG />, bg: "bg-[#dd4b39]", href: "/" },
+  { icon: <FaInstagram />, bg: "bg-[#dd2a7b]", href: "https://www.instagram.com" },
 ];
 
 export default function SocialIcons() {

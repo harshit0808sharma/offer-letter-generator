@@ -2,25 +2,20 @@
 import Link from "next/link";
 import { useState, useEffect, useContext } from "react";
 import { FaFileAlt, FaBars, FaTimes } from "react-icons/fa";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { AppContext } from "@/app/context/AppContext";
-import ToggleSwitch from "../Home/ToggleSwitch";
 import { FiLogOut } from "react-icons/fi";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
   const pathname = usePathname();
-  
+
   // Get the proper logout function from context
-  const { 
-    isAuthenticated, 
-    setIsAuthenticated, 
-    setCookieExists, 
-    cookieExists,
-    handleLogout: contextLogout  // ✅ Use the context's logout function
+  const {
+    setIsAuthenticated,
+    handleLogout: contextLogout
   } = useContext(AppContext);
 
   useEffect(() => {
@@ -47,19 +42,18 @@ const Header = () => {
     };
   }, [isOpen]);
 
-  // ✅ FIXED: Use the context's logout function instead of creating our own
   const handleLogout = async () => {
     try {
       // Optional: Call your API logout endpoint if needed
       await fetch("/api/logout", { method: "POST" });
-      
+
       // Use the context's logout function which properly clears localStorage
       contextLogout();
-      
+
       toast.success("Logged out successfully");
     } catch (error) {
       console.error("API logout failed:", error);
-      
+
       // Even if API fails, still logout locally
       contextLogout();
       toast.success("Logged out successfully");
@@ -75,7 +69,7 @@ const Header = () => {
     { name: "Pending", path: "/pending" },
   ];
 
-  const isUserLoggedIn = cookieExists === "exists" || isAuthenticated;
+  // const isUserLoggedIn = cookieExists === "exists" || isAuthenticated;
 
   return (
     <>
@@ -92,7 +86,7 @@ const Header = () => {
                 <FaFileAlt className="text-white text-sm" />
               </div>
               <span className="text-2xl font-bold text-black">
-                LOKACI
+                Offerly
               </span>
             </Link>
 
@@ -124,26 +118,20 @@ const Header = () => {
               >
                 Dashboard
               </Link>
+              <button
+                onClick={handleLogout}
+                className="group relative flex items-center justify-start w-12 h-12 rounded-full bg-red-500 text-white shadow-md overflow-hidden transition-all duration-300 hover:w-32 hover:rounded-2xl active:translate-x-[2px] active:translate-y-[2px]"
+              >
+                {/* Icon */}
+                <div className="flex items-center justify-center w-full transition-all duration-300 ease-in-out group-hover:w-1/3 pl-0 group-hover:pl-4 h-full">
+                  <FiLogOut size={18} />
+                </div>
 
-              {isUserLoggedIn && (
-                <button
-                  onClick={handleLogout}
-                  className="group relative flex items-center justify-start w-12 h-12 rounded-full bg-red-500 text-white shadow-md overflow-hidden transition-all duration-300 hover:w-32 hover:rounded-2xl active:translate-x-[2px] active:translate-y-[2px]"
-                >
-                  {/* Icon */}
-                  <div className="flex items-center justify-center w-full transition-all duration-300 ease-in-out group-hover:w-1/3 pl-0 group-hover:pl-4 h-full">
-                    <FiLogOut size={18} />
-                  </div>
-
-                  {/* Text */}
-                  <span className="absolute right-0 w-0 opacity-0 text-sm font-semibold transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:w-2/3 group-hover:pr-3 flex items-center h-full">
-                    Logout
-                  </span>
-                </button>
-              )}
-              {/* {isUserLoggedIn && (
-                <ProfileMenu />
-              )} */}
+                {/* Text */}
+                <span className="absolute right-0 w-0 opacity-0 text-sm font-semibold transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:w-2/3 group-hover:pr-3 flex items-center h-full">
+                  Logout
+                </span>
+              </button>
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -227,8 +215,6 @@ const Header = () => {
                   >
                     Dashboard
                   </Link>
-
-                  {isUserLoggedIn && (
                     <button
                       onClick={() => {
                         toggleMenu();
@@ -246,9 +232,7 @@ const Header = () => {
                         Logout
                       </span>
                     </button>
-                  )}
                 </div>
-
               </nav>
             </div>
           </div>

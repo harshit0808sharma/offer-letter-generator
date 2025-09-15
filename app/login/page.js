@@ -58,13 +58,13 @@ export default function LoginPage() {
                 <div className="flex-1 flex items-center justify-center bg-white px-8 py-12">
                     <div className="w-full max-w-md">
                         {/* <div className="flex items-center mb-8">
-                            <Image src="/images/LokaciLogo.png" alt="logo image" width={48} height={48} className="w-24 h-20"/>
+                            <Image src="/images/OfferlyLogo.png" alt="logo image" width={48} height={48} className="w-24 h-20"/>
                         </div> */}
                         <div className="flex items-center mb-8">
                             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
                                 <HiUsers className="w-5 h-5 text-white" />
                             </div>
-                            <span className="text-xl font-semibold text-gray-800">The Salon Company</span>
+                            <span className="text-xl font-semibold text-gray-800">Offer Letter Platform</span>
                         </div>
                         <h1 className="text-2xl font-bold text-gray-900 mb-2">Log in to your Account</h1>
                         <p className="text-gray-500 mb-8">Note: Login with you authorized credentials!</p>

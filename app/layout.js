@@ -5,7 +5,7 @@ import { Montserrat } from 'next/font/google';
 import { AuthProvider } from "./context/AuthContext";
 
 export const metadata = {
-  title: "Lokaci Offer Letter",
+  title: "Offer Letter",
   description: "offer letter generator application",
 };
 

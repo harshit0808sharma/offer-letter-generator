@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 import { FaArrowRight, FaUserTie, FaDownload, FaSave } from "react-icons/fa";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { FaFileAlt, FaEye, FaPalette, FaLaptop } from "react-icons/fa";
-// import { motion } from "framer-motion";
 
 const Hero = () => {
   const [flipIndex, setFlipIndex] = useState(0);
@@ -47,12 +46,6 @@ const Hero = () => {
     { icon: <FaLaptop className="text-green-600 text-2xl" />, text: "Cross-Platform" },
   ];
 
-  // const stats = [
-  //   { number: "200+", label: "Employees Using Platform", color: "from-blue-500 to-indigo-500" },
-  //   { number: "50+", label: "Internal Teams Supported", color: "from-purple-500 to-pink-500" },
-  //   { number: "100%", label: "Internal Uptime", color: "from-green-500 to-teal-500" }
-  // ];
-
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isHovered) setFlipIndex((prev) => (prev + 1) % cardData.length);
@@ -61,7 +54,6 @@ const Hero = () => {
   }, [cardData.length, isHovered]);
 
   const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
-  const fadeIn = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
 
   return (
     <section className="relative min-h-screen bg-gray-50 overflow-hidden">
@@ -72,7 +64,7 @@ const Hero = () => {
           <div className="text-center lg:text-left space-y-8">
             <motion.div initial="hidden" animate={isInView ? "visible" : "hidden"} variants={fadeUp} transition={{ duration: 0.6 }}>
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full px-4 py-2 border border-blue-200/50">
-                <span className="text-sm font-medium text-blue-700">Powered By Lokaci</span>
+                <span className="text-sm font-medium text-blue-700">Powered By Offerly</span>
               </div>
             </motion.div>
 
@@ -104,7 +96,7 @@ const Hero = () => {
                 </motion.div>
               </Link>
 
-              <Link href="https://lokaci.com/">
+              <Link href="/">
                 <motion.div whileHover={{ scale: 1.05 }} className="inline-flex items-center px-8 py-4 text-lg font-semibold text-gray-700 border-2 border-gray-200 rounded-sm bg-white/50 backdrop-blur-sm hover:bg-white transition-all duration-300 shadow-lg">
                   Visit Main Site
                 </motion.div>
@@ -178,31 +170,6 @@ const Hero = () => {
           </div>
 
         </div>
-
-        {/* Stats */}
-        {/* <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex justify-center mt-12"
-        >
-          <div className="flex items-center gap-8 bg-white/70 backdrop-blur-lg rounded-2xl px-8 py-4 shadow-lg border border-white/20">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="text-center"
-              >
-                <div className={`text-2xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
-                  {stat.number}
-                </div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div> */}
       </div>
     </section>
   );

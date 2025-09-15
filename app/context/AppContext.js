@@ -16,13 +16,6 @@ const STORAGE_KEYS = {
   COOKIE_EXISTS: "cookieExists"
 };
 
-const WATERMARK_CONFIG = {
-  scale: 0.6,
-  alpha: 0.12,
-  src: "/images/logo.png"
-};
-
-
 const DEFAULT_FORM_DATA = {
   candidateName: "",
   jobTitle: "",
@@ -31,10 +24,10 @@ const DEFAULT_FORM_DATA = {
   salary: "",
   hrManagerName: "",
   employmentType: "Full-time",
-  companyName: "The Salon Company",
-  companyAddress: "Lokaci H.Q., Sector 117, Noida",
+  companyName: "Offerly",
+  companyAddress: "Offerly, India",
   companyPhone: "(555) 123-4567",
-  companyEmail: "hr@lokaci.com",
+  companyEmail: "hr@offerly.com",
   probationPeriod: "90 days",
   workingHours: "Monday to Friday, 9:00 AM to 6:00 PM",
   offerDeadline: "",
@@ -128,7 +121,6 @@ export const AppProvider = ({ children }) => {
     setCookieExists(null);
     router.push("/login");
   }, [router]);
-
 
   useEffect(() => {
     if (activeField && fieldRefs.current[activeField]) {
@@ -251,21 +243,11 @@ export const AppProvider = ({ children }) => {
     }
   }, [pendingLetters, deletePendingLetter, router]);
 
-  // const deleteRecentLetter = useCallback((id) => {
-  //   setRecentLetters((prev) => {
-  //     const updatedLetters = prev.filter((letter) => letter.id !== id);
-  //     console.log('Deleting recent letter with id:', id);
-  //     console.log('Updated recent letters after delete:', updatedLetters);
-  //     return updatedLetters;
-  //   });
-  //   toast.info("Letter removed from recent.");
-  // }, []);
   const deleteAllRecentLetters = useCallback(() => {
     setRecentLetters([]);
     localStorage.removeItem(STORAGE_KEYS.RECENT_LETTERS);
     toast.info("All recent letters have been removed.");
   }, []);
-
 
   const validateRequiredFields = useCallback(() => {
     const requiredFields = [
@@ -276,49 +258,6 @@ export const AppProvider = ({ children }) => {
 
     return requiredFields.every(field => formData[field]?.toString().trim());
   }, [formData]);
-
-  const loadImage = useCallback(async (src) => {
-    try {
-      return await new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error("Image load error"));
-        img.src = src;
-      });
-    } catch (err) {
-      const resp = await fetch(src);
-      const blob = await resp.blob();
-      const dataUrl = await new Promise((resolve) => {
-        const fr = new FileReader();
-        fr.onload = () => resolve(fr.result);
-        fr.readAsDataURL(blob);
-      });
-      return loadImage(dataUrl);
-    }
-  }, []);
-
-  const addWatermarkToCanvas = useCallback((canvas, watermarkImg) => {
-    const finalCanvas = document.createElement("canvas");
-    finalCanvas.width = canvas.width;
-    finalCanvas.height = canvas.height;
-    const ctx = finalCanvas.getContext("2d");
-
-    ctx.drawImage(canvas, 0, 0);
-
-    const wmWidthPx = finalCanvas.width * WATERMARK_CONFIG.scale;
-    const aspect = watermarkImg.height / watermarkImg.width;
-    const wmHeightPx = wmWidthPx * aspect;
-
-    ctx.save();
-    ctx.globalAlpha = WATERMARK_CONFIG.alpha;
-    ctx.translate(finalCanvas.width / 2, finalCanvas.height / 2);
-    ctx.drawImage(watermarkImg, -wmWidthPx / 2, -wmHeightPx / 2, wmWidthPx, wmHeightPx);
-    ctx.restore();
-    ctx.globalAlpha = 1;
-
-    return finalCanvas;
-  }, []);
 
   const saveToRecentLetters = useCallback(() => {
     const newLetter = {
@@ -343,285 +282,259 @@ export const AppProvider = ({ children }) => {
     resetFormData();
   }, [formData, category, resetFormData]);
 
-const generatePDF = useCallback(async () => {
-  if (!validateRequiredFields()) {
-    toast.error("Please fill in all required fields before generating the letter.");
-    return;
-  }
-
-  try {
-    const pages = document.querySelectorAll(".page");
-    if (!pages.length) {
-      toast.error("No pages found to print.");
+  const generatePDF = useCallback(async () => {
+    if (!validateRequiredFields()) {
+      toast.error("Please fill in all required fields before generating the letter.");
       return;
     }
 
-    const pdf = new jsPDF("p", "pt", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const headerHeight = 120;
-    const footerHeight = 30;
-    const margin = PDF_CONFIG?.margin ?? { top: 40, left: 40, right: 40, bottom: 40 };
-
-    // Validate that there's enough space for content
-    const availableContentHeight = pageHeight - margin.top - margin.bottom - headerHeight - footerHeight;
-    if (availableContentHeight <= 50) {
-      throw new Error("Page margins and header/footer are too large - no space left for content.");
-    }
-
-    // Load watermark and logo
-    const watermarkImg = await loadImage(WATERMARK_CONFIG.src);
-    let logoBase64 = null;
     try {
-      const logoResp = await fetch('/images/LokaciLogo.png');
-      if (logoResp.ok) {
-        const logoBlob = await logoResp.blob();
-        logoBase64 = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(logoBlob);
+      const pages = document.querySelectorAll(".page");
+      if (!pages.length) {
+        toast.error("No pages found to print.");
+        return;
+      }
+
+      const pdf = new jsPDF("p", "pt", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const headerHeight = 80;
+      const footerHeight = 30;
+      const margin = PDF_CONFIG?.margin ?? { top: 40, left: 40, right: 40, bottom: 40 };
+
+      // Validate that there's enough space for content
+      const availableContentHeight = pageHeight - margin.top - margin.bottom - headerHeight - footerHeight;
+      if (availableContentHeight <= 50) {
+        throw new Error("Page margins and header/footer are too large - no space left for content.");
+      }
+
+      const drawHeader = (pdfDoc) => {
+        const centerX = pageWidth / 2;
+        const startY = margin.top;
+
+        // Draw header background
+        pdfDoc.setFillColor(248, 250, 252);
+        pdfDoc.rect(margin.left, startY, pageWidth - margin.left - margin.right, headerHeight, 'F');
+
+        // Company name
+        pdfDoc.setFontSize(20);
+        pdfDoc.setFont("times", "bold");
+        pdfDoc.setTextColor(17, 24, 39);
+        pdfDoc.text(formData.companyName || '[Company Name]', centerX, startY + 30, { align: "center" });
+
+        // Subtitle
+        pdfDoc.setFontSize(14);
+        pdfDoc.setFont("times", "normal");
+        pdfDoc.setTextColor(75, 85, 99);
+        pdfDoc.text("Professional Services", centerX, startY + 50, { align: "center" });
+
+        // Address and contact
+        pdfDoc.setFontSize(12);
+        pdfDoc.setTextColor(107, 114, 128);
+        const addressText = `${formData.companyAddress || '[Company Address]'} | Phone: ${formData.companyPhone || '[Company Phone]'}`;
+        pdfDoc.text(addressText, centerX, startY + 70, { 
+          align: "center", 
+          maxWidth: pageWidth - margin.left - margin.right - 20 
         });
-      }
-    } catch (err) {
-      console.warn("Logo loading failed:", err);
-    }
+      };
 
-    const drawHeader = (pdfDoc, logo) => {
-      const centerX = pageWidth / 2;
-      const startY = margin.top;
-
-      // Draw header background (optional)
-      pdfDoc.setFillColor(248, 250, 252);
-      pdfDoc.rect(margin.left, startY, pageWidth - margin.left - margin.right, headerHeight, 'F');
-
-      if (logo) {
-        const logoSize = 48;
-        const logoX = centerX - logoSize / 2;
-        const logoY = startY + 10;
-        pdfDoc.addImage(logo, "PNG", logoX, logoY, logoSize, logoSize);
-      }
-
-      // Company name
-      pdfDoc.setFontSize(20);
-      pdfDoc.setFont("times", "bold");
-      pdfDoc.setTextColor(17, 24, 39);
-      pdfDoc.text(formData.companyName || '[Company Name]', centerX, startY + (logo ? 75 : 30), { align: "center" });
-
-      // Subtitle
-      pdfDoc.setFontSize(14);
-      pdfDoc.setFont("times", "normal");
-      pdfDoc.setTextColor(75, 85, 99);
-      pdfDoc.text("Professional Services", centerX, startY + (logo ? 95 : 50), { align: "center" });
-
-      // Address and contact
-      pdfDoc.setFontSize(12);
-      pdfDoc.setTextColor(107, 114, 128);
-      const addressText = `${formData.companyAddress || '[Company Address]'} | Phone: ${formData.companyPhone || '[Company Phone]'}`;
-      pdfDoc.text(addressText, centerX, startY + (logo ? 115 : 70), { 
-        align: "center", 
-        maxWidth: pageWidth - margin.left - margin.right - 20 
-      });
-    };
-
-    const drawFooter = (pdfDoc, pageNumber, totalPages) => {
-      const footerY = pageHeight - margin.bottom - 10;
-      
-      // Page number
-      pdfDoc.setFontSize(10);
-      pdfDoc.setTextColor(100, 100, 100);
-      pdfDoc.text(`Page ${pageNumber}${totalPages ? ` of ${totalPages}` : ''}`, pageWidth / 2, footerY, { align: 'center' });
-      
-      // Optional footer line
-      pdfDoc.setDrawColor(200, 200, 200);
-      pdfDoc.line(margin.left, footerY - 15, pageWidth - margin.right, footerY - 15);
-    };
-
-    let currentPageNumber = 0;
-    let isFirstPage = true;
-    const allCanvases = [];
-
-    // First pass: convert all pages to canvases
-    for (let i = 0; i < pages.length; i++) {
-      const page = pages[i];
-      
-      // Check if page has actual content
-      const hasContent = page.textContent?.trim() || page.querySelector('img, canvas, svg');
-      if (!hasContent) {
-        console.log(`Skipping empty page ${i + 1}`);
-        continue;
-      }
-
-      const canvas = await html2canvas(page, {
-        scale: PDF_CONFIG?.scale ?? Math.max(1.5, window.devicePixelRatio || 1),
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#FFFFFF',
-        logging: false,
-        width: page.scrollWidth,
-        height: page.scrollHeight,
-        onclone: (clonedDoc) => {
-          // Ensure all elements are visible in the clone
-          const elements = clonedDoc.querySelectorAll('*');
-          elements.forEach(el => {
-            if (el.style) {
-              el.style.transform = '';
-              el.style.transformOrigin = '';
-            }
-          });
-        }
-      });
-
-      if (canvas.width === 0 || canvas.height === 0) {
-        console.warn(`Canvas for page ${i + 1} has zero dimensions, skipping`);
-        continue;
-      }
-
-      const finalCanvas = addWatermarkToCanvas(canvas, watermarkImg);
-      allCanvases.push(finalCanvas);
-    }
-
-    if (allCanvases.length === 0) {
-      toast.error("No content found to generate PDF.");
-      return;
-    }
-
-    // Second pass: process canvases and create PDF pages
-    for (let canvasIndex = 0; canvasIndex < allCanvases.length; canvasIndex++) {
-      const finalCanvas = allCanvases[canvasIndex];
-      
-      // Calculate dimensions and conversion factors
-      const contentWidthPt = pageWidth - (margin.left + margin.right);
-      const pxPerPt = finalCanvas.width / contentWidthPt;
-      const totalContentHeightPt = finalCanvas.height / pxPerPt;
-      const availableHeightPt = availableContentHeight;
-
-      let remainingHeightPt = totalContentHeightPt;
-      let yOffsetPt = 0;
-
-      // Split canvas into pages
-      while (remainingHeightPt > 0) {
-        const sliceHeightPt = Math.min(remainingHeightPt, availableHeightPt);
-        const sliceHeightPx = Math.max(1, Math.round(sliceHeightPt * pxPerPt));
-        const sourceYpx = Math.round(yOffsetPt * pxPerPt);
-
-        // Defensive bounds checking
-        const maxAvailablePx = Math.max(0, finalCanvas.height - sourceYpx);
-        const actualSliceHeightPx = Math.min(sliceHeightPx, maxAvailablePx);
+      const drawFooter = (pdfDoc, pageNumber, totalPages) => {
+        const footerY = pageHeight - margin.bottom - 10;
         
-        if (actualSliceHeightPx <= 0) {
-          console.warn('No more content to slice, breaking');
-          break;
+        // Page number
+        pdfDoc.setFontSize(10);
+        pdfDoc.setTextColor(100, 100, 100);
+        pdfDoc.text(`Page ${pageNumber}${totalPages ? ` of ${totalPages}` : ''}`, pageWidth / 2, footerY, { align: 'center' });
+        
+        // Footer line
+        pdfDoc.setDrawColor(200, 200, 200);
+        pdfDoc.line(margin.left, footerY - 15, pageWidth - margin.right, footerY - 15);
+      };
+
+      let currentPageNumber = 0;
+      let isFirstPage = true;
+      const allCanvases = [];
+
+      // First pass: convert all pages to canvases
+      for (let i = 0; i < pages.length; i++) {
+        const page = pages[i];
+        
+        // Check if page has actual content
+        const hasContent = page.textContent?.trim() || page.querySelector('img, canvas, svg');
+        if (!hasContent) {
+          console.log(`Skipping empty page ${i + 1}`);
+          continue;
         }
 
-        const actualSliceHeightPt = actualSliceHeightPx / pxPerPt;
-
-        // Create slice canvas with proper error handling
-        const sliceCanvas = document.createElement('canvas');
-        sliceCanvas.width = finalCanvas.width;
-        sliceCanvas.height = actualSliceHeightPx;
-        
-        const sliceCtx = sliceCanvas.getContext('2d');
-        if (!sliceCtx) {
-          throw new Error('Failed to get 2D context for slice canvas');
-        }
-        
-        sliceCtx.imageSmoothingEnabled = true;
-        sliceCtx.imageSmoothingQuality = 'high';
-        
-        try {
-          sliceCtx.drawImage(
-            finalCanvas,
-            0, sourceYpx,
-            finalCanvas.width, actualSliceHeightPx,
-            0, 0,
-            sliceCanvas.width, sliceCanvas.height
-          );
-        } catch (drawError) {
-          console.error('Error drawing image slice:', drawError);
-          throw new Error(`Failed to create content slice: ${drawError.message}`);
-        }
-
-        // Convert to data URL with error handling
-        let sliceImgData;
-        try {
-          sliceImgData = sliceCanvas.toDataURL('image/jpeg', PDF_CONFIG?.quality ?? 0.92);
-          if (!sliceImgData || sliceImgData === 'data:,') {
-            throw new Error('Canvas toDataURL returned empty result');
+        const canvas = await html2canvas(page, {
+          scale: PDF_CONFIG?.scale ?? Math.max(1.5, window.devicePixelRatio || 1),
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#FFFFFF',
+          logging: false,
+          width: page.scrollWidth,
+          height: page.scrollHeight,
+          onclone: (clonedDoc) => {
+            // Ensure all elements are visible in the clone
+            const elements = clonedDoc.querySelectorAll('*');
+            elements.forEach(el => {
+              if (el.style) {
+                el.style.transform = '';
+                el.style.transformOrigin = '';
+              }
+            });
           }
-        } catch (err) {
-          console.error('toDataURL failed:', err);
-          throw new Error(`Failed to convert content to image: ${err.message}`);
+        });
+
+        if (canvas.width === 0 || canvas.height === 0) {
+          console.warn(`Canvas for page ${i + 1} has zero dimensions, skipping`);
+          continue;
         }
 
-        // Add new page (except for the very first page)
-        if (!isFirstPage) {
-          pdf.addPage();
+        allCanvases.push(canvas);
+      }
+
+      if (allCanvases.length === 0) {
+        toast.error("No content found to generate PDF.");
+        return;
+      }
+
+      // Second pass: process canvases and create PDF pages
+      for (let canvasIndex = 0; canvasIndex < allCanvases.length; canvasIndex++) {
+        const canvas = allCanvases[canvasIndex];
+        
+        // Calculate dimensions and conversion factors
+        const contentWidthPt = pageWidth - (margin.left + margin.right);
+        const pxPerPt = canvas.width / contentWidthPt;
+        const totalContentHeightPt = canvas.height / pxPerPt;
+        const availableHeightPt = availableContentHeight;
+
+        let remainingHeightPt = totalContentHeightPt;
+        let yOffsetPt = 0;
+
+        // Split canvas into pages
+        while (remainingHeightPt > 0) {
+          const sliceHeightPt = Math.min(remainingHeightPt, availableHeightPt);
+          const sliceHeightPx = Math.max(1, Math.round(sliceHeightPt * pxPerPt));
+          const sourceYpx = Math.round(yOffsetPt * pxPerPt);
+
+          // Defensive bounds checking
+          const maxAvailablePx = Math.max(0, canvas.height - sourceYpx);
+          const actualSliceHeightPx = Math.min(sliceHeightPx, maxAvailablePx);
+          
+          if (actualSliceHeightPx <= 0) {
+            console.warn('No more content to slice, breaking');
+            break;
+          }
+
+          const actualSliceHeightPt = actualSliceHeightPx / pxPerPt;
+
+          // Create slice canvas with proper error handling
+          const sliceCanvas = document.createElement('canvas');
+          sliceCanvas.width = canvas.width;
+          sliceCanvas.height = actualSliceHeightPx;
+          
+          const sliceCtx = sliceCanvas.getContext('2d');
+          if (!sliceCtx) {
+            throw new Error('Failed to get 2D context for slice canvas');
+          }
+          
+          sliceCtx.imageSmoothingEnabled = true;
+          sliceCtx.imageSmoothingQuality = 'high';
+          
+          try {
+            sliceCtx.drawImage(
+              canvas,
+              0, sourceYpx,
+              canvas.width, actualSliceHeightPx,
+              0, 0,
+              sliceCanvas.width, sliceCanvas.height
+            );
+          } catch (drawError) {
+            console.error('Error drawing image slice:', drawError);
+            throw new Error(`Failed to create content slice: ${drawError.message}`);
+          }
+
+          // Convert to data URL with error handling
+          let sliceImgData;
+          try {
+            sliceImgData = sliceCanvas.toDataURL('image/jpeg', PDF_CONFIG?.quality ?? 0.92);
+            if (!sliceImgData || sliceImgData === 'data:,') {
+              throw new Error('Canvas toDataURL returned empty result');
+            }
+          } catch (err) {
+            console.error('toDataURL failed:', err);
+            throw new Error(`Failed to convert content to image: ${err.message}`);
+          }
+
+          // Add new page (except for the very first page)
+          if (!isFirstPage) {
+            pdf.addPage();
+          }
+          isFirstPage = false;
+          currentPageNumber++;
+
+          // Always draw header and footer
+          drawHeader(pdf);
+          drawFooter(pdf, currentPageNumber);
+
+          // Add content image
+          try {
+            pdf.addImage(
+              sliceImgData, 
+              'JPEG', 
+              margin.left, 
+              margin.top + headerHeight + 10, 
+              contentWidthPt, 
+              actualSliceHeightPt
+            );
+          } catch (imgError) {
+            console.error('Error adding image to PDF:', imgError);
+            throw new Error(`Failed to add content to PDF: ${imgError.message}`);
+          }
+
+          // Update for next iteration
+          remainingHeightPt -= actualSliceHeightPt;
+          yOffsetPt += actualSliceHeightPt;
+
+          // Clean up slice canvas
+          sliceCanvas.width = 0;
+          sliceCanvas.height = 0;
+
+          // Safety check to prevent infinite loops
+          if (remainingHeightPt > 0 && actualSliceHeightPt === 0) {
+            console.warn('No progress made in slicing, breaking to prevent infinite loop');
+            break;
+          }
         }
-        isFirstPage = false;
-        currentPageNumber++;
+      }
 
-        // Always draw header and footer
-        drawHeader(pdf, logoBase64);
-        drawFooter(pdf, currentPageNumber);
+      // Generate filename and save
+      const safeCandidateName = (formData.candidateName || 'Candidate')
+        .replace(/[^a-zA-Z0-9\s-_]/g, '')
+        .replace(/\s+/g, '_')
+        .substring(0, 50);
+      const filename = `${safeCandidateName}_Offer_Letter_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      pdf.save(filename);
 
-        // Add content image
+      if (saveToRecentLetters) {
         try {
-          pdf.addImage(
-            sliceImgData, 
-            'JPEG', 
-            margin.left, 
-            margin.top + headerHeight + 10, 
-            contentWidthPt, 
-            actualSliceHeightPt
-          );
-        } catch (imgError) {
-          console.error('Error adding image to PDF:', imgError);
-          throw new Error(`Failed to add content to PDF: ${imgError.message}`);
-        }
-
-        // Update for next iteration
-        remainingHeightPt -= actualSliceHeightPt;
-        yOffsetPt += actualSliceHeightPt;
-
-        // Clean up slice canvas
-        sliceCanvas.width = 0;
-        sliceCanvas.height = 0;
-
-        // Safety check to prevent infinite loops
-        if (remainingHeightPt > 0 && actualSliceHeightPt === 0) {
-          console.warn('No progress made in slicing, breaking to prevent infinite loop');
-          break;
+          await saveToRecentLetters();
+        } catch (saveError) {
+          console.warn('Failed to save to recent letters:', saveError);
         }
       }
+
+      toast.success(`Offer letter generated successfully! (${currentPageNumber} pages)`);
+
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      const errorMessage = err?.message || String(err);
+      toast.error(`Error generating PDF: ${errorMessage}. Please try again.`);
     }
+  }, [validateRequiredFields, formData, saveToRecentLetters]);
 
-    // Generate filename and save
-    const safeCandidateName = (formData.candidateName || 'Candidate')
-      .replace(/[^a-zA-Z0-9\s-_]/g, '')
-      .replace(/\s+/g, '_')
-      .substring(0, 50);
-    const filename = `${safeCandidateName}_Offer_Letter_${new Date().toISOString().split('T')[0]}.pdf`;
-    
-    pdf.save(filename);
-
-    if (saveToRecentLetters) {
-      try {
-        await saveToRecentLetters();
-      } catch (saveError) {
-        console.warn('Failed to save to recent letters:', saveError);
-      }
-    }
-
-    toast.success(`Offer letter generated successfully! (${currentPageNumber} pages)`);
-
-  } catch (err) {
-    console.error("PDF generation error:", err);
-    const errorMessage = err?.message || String(err);
-    toast.error(`Error generating PDF: ${errorMessage}. Please try again.`);
-    
-  }
-}, [validateRequiredFields, formData, loadImage, addWatermarkToCanvas, saveToRecentLetters]);
   const handleLogout = useCallback(() => {
     console.log('Starting logout process...');
     setIsLoggingOut(true);

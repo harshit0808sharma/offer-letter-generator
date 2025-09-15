@@ -44,19 +44,19 @@ const MissionSection = () => {
                             className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight tracking-tight"
                             variants={itemVariants}
                         >
-                            Our Mission: Empowering Salons with Efficiency
+                            Our Mission: Simplifying Offer Letter Creation
                         </motion.h2>
                         <motion.p
                             className="text-lg text-gray-300 mb-6 leading-relaxed"
                             variants={itemVariants}
                         >
-                            Our goal is to make offer letter generation fast, accurate, and stress-free for salon companies. With our platform, you can create fully customized letters in minutes, ensuring professionalism and consistency for every candidate.
+                            We help businesses create professional offer letters quickly and accurately. Our platform automates the entire process so you can focus on hiring, not paperwork.
                         </motion.p>
                         <motion.p
                             className="text-gray-400 leading-relaxed"
                             variants={itemVariants}
                         >
-                            Whether you are hiring full-time employees, interns, or contractors, our tool adapts to your needs. Save time, avoid manual errors, and impress your new hires with beautifully designed offer letters.
+                            Whether it is for full-time employees, interns, or contractors, our tool generates fully customized letters in minutes, ensuring consistency and accuracy every time.
                         </motion.p>
                     </div>
 

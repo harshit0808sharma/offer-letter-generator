@@ -18,7 +18,7 @@ export default function OfferLetterGenerator() {
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-3">
               <FaFileAlt className="text-blue-600" />
-              The Salon Company
+              Offer Letter Platform
             </h1>
             <p className="text-gray-600 text-sm md:text-base">
               Internal platform for generating offer letters

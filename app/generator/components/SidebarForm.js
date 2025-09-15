@@ -177,7 +177,7 @@ const SidebarForm = () => {
                   onFocus={() => setActiveField("companyName")}
                   value={formData.companyName || ""}
                   onChange={(e) => handleInputChange("companyName", e.target.value)}
-                  placeholder="e.g., The Salon Company"
+                  placeholder="e.g., Offer Letter Platform"
                   className="form-input w-full"
                 />
               </div>
@@ -193,7 +193,7 @@ const SidebarForm = () => {
                     onFocus={() => setActiveField("companyAddress")}
                     value={formData.companyAddress || ""}
                     onChange={(e) => handleInputChange("companyAddress", e.target.value)}
-                    placeholder="e.g., Lokaci H.Q., Sector 117, Noida"
+                    placeholder="e.g., Offerly, India"
                     className="form-input w-full"
                   />
                 </div>
@@ -225,7 +225,7 @@ const SidebarForm = () => {
                     onFocus={() => setActiveField("companyEmail")}
                     value={formData.companyEmail || ""}
                     onChange={(e) => handleInputChange("companyEmail", e.target.value)}
-                    placeholder="e.g., hr@lokaci.com"
+                    placeholder="e.g., hr@Offerly.com"
                     className="form-input w-full"
                   />
                 </div>

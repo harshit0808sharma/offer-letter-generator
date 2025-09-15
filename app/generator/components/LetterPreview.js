@@ -330,7 +330,7 @@ const LetterPreview = ({ previewRef }) => {
                           style={{ outline: "none" }}
                         />
                         <p className="text-xs" style={{ color: '#6B7280' }}>Human Resources Manager</p>
-                        <p className="text-xs" style={{ color: '#6B7280' }}>Lokaci Private Limited</p>
+                        <p className="text-xs" style={{ color: '#6B7280' }}>Offerly</p>
                       </div>
                     </div>
 
