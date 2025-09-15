@@ -57,7 +57,7 @@ export default function TestimonialsSection() {
             className="text-xl text-gray-600 max-w-3xl mx-auto"
             variants={itemVariants}
           >
-            Don not just take our word for it, hear from the companies already transforming their hiring process
+            Don&apos;t just take our word for it, hear from the companies already transforming their hiring process
           </motion.p>
         </motion.div>
 
@@ -79,7 +79,9 @@ export default function TestimonialsSection() {
                   <FaStar key={i} className="w-5 h-5 text-yellow-400" />
                 ))}
               </div>
-              <p className="text-gray-700 mb-6 italic">"{testimonial.text}"</p>
+              <p className="text-gray-700 mb-6 italic">
+                &quot;{testimonial.text}&quot;
+              </p>
               <div className="border-t pt-4">
                 <p className="font-semibold text-gray-900">{testimonial.author}</p>
                 <p className="text-gray-600">{testimonial.company}</p>
