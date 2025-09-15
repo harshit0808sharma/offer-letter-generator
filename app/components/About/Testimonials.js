@@ -57,7 +57,7 @@ export default function TestimonialsSection() {
             className="text-xl text-gray-600 max-w-3xl mx-auto"
             variants={itemVariants}
           >
-            Don't just take our word for it - hear from the companies already transforming their hiring process
+            Don not just take our word for it, hear from the companies already transforming their hiring process
           </motion.p>
         </motion.div>
 
